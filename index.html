@@ -128,6 +128,51 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:480px){body{font-size:18px}.actions .btn{padding:10px 14px}.actions .btn.primary{flex:1}.topbar .brand{font-size:1.05rem}.sheet{padding:18px}.sections{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:1.75rem}}
+.tag{font-size:.75rem;font-weight:600;letter-spacing:.04em;color:var(--accent);display:block}
+.tag-muted{color:var(--muted)}.tag-good{color:var(--good)}
+.pyramid{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pyramid div{border:1px solid var(--line);border-radius:4px;padding:5px 8px;text-align:center;font-size:.85rem;max-width:100%}
+.pyramid div:first-child{background:color-mix(in srgb,var(--accent) 14%,transparent);border-color:var(--accent)}
+.pyramid b{display:block;font-family:var(--f-mono);font-weight:500;font-size:.8rem;direction:ltr;color:var(--accent)}
+.example{border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;gap:4px;background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.three div,.compare div{border:1px solid var(--line);border-radius:6px;padding:10px;display:grid;gap:2px;align-content:start;font-size:.92rem}
+.three b,.compare b{font-family:var(--f-display);font-size:1.1rem}
+.three .en{color:var(--accent);font-size:.78rem}
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bignum{font-family:var(--f-display);font-weight:900;font-size:2.2rem;color:var(--accent);line-height:1.1;font-variant-numeric:tabular-nums}
+.people{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.people i{width:24px;height:34px;border-radius:12px 12px 6px 6px;background:var(--line);display:block}
+.people i.on{background:var(--accent)}
+.scale{position:relative;height:84px;border-top:3px solid var(--line);margin:18px 8px 0}
+.scale span{position:absolute;top:6px;transform:translateX(50%);text-align:center;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.scale span.mark{top:48px;color:var(--accent);font-weight:600;white-space:nowrap;transform:translateX(30%)}
+.scale span.mark::before{content:"";position:absolute;top:-50px;inset-inline-end:30%;width:3px;height:44px;background:var(--accent)}
+.grade{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.grade li{display:grid;grid-template-columns:auto auto 1fr;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:6px;font-size:.92rem}
+.grade .dots{color:var(--accent);letter-spacing:2px;direction:ltr}
+.checklist.red li::before{content:"✕ ";color:var(--bad);font-weight:700}
+.checklist.green li::before{content:"✓ ";color:var(--good);font-weight:700}
+.prompt{display:grid;gap:8px}
+.prompt pre{margin:0;white-space:pre-wrap;font-family:var(--f-body);font-size:.92rem;line-height:1.6;border:1px dashed var(--accent);border-radius:6px;padding:12px;background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.prompt .copy{justify-self:start}
+.paperc{display:grid;gap:6px;border:1px solid var(--line);border-radius:6px;padding:14px;background:color-mix(in srgb,var(--hl) 8%,transparent)}
+.paperc b{font-family:var(--f-display);font-size:1.2rem}
+.paperc .claim{font-weight:600;border-inline-start:4px solid var(--hl);padding-inline-start:10px}
+.qcard{font-size:1.05rem;line-height:1.6}
+.fig{width:100%;max-width:440px;height:auto;display:block;margin:0 auto}
+.fig .s-zero{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:4 3}
+.fig .s-ci{stroke:var(--ink);stroke-width:2}
+.fig .s-dot,.fig .s-sq{fill:var(--accent)}
+.fig .s-dia{fill:var(--hl);stroke:var(--ink);stroke-width:1}
+.fig .s-dash{stroke:var(--line);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.fig .s-miss{fill:none;stroke:var(--bad);stroke-width:1.5;stroke-dasharray:4 3}
+.fig .s-t{fill:var(--ink);font:600 12px var(--f-mono)}
+.fig .s-m{fill:var(--muted);font:12px var(--f-body)}
+.unlock{justify-self:center}
+@media (max-width:480px){.three{grid-template-columns:1fr}}
+.actions .btn{white-space:nowrap}
+@media (max-width:480px){.actions .spacer{display:none}.actions{gap:8px}}
 </style>
 
 </head>
@@ -135,17 +180,66 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 <div id="app" dir="rtl" lang="he"></div>
 
 <script>
-const LEVELS=[
- {n:1,name:'אנטומיה של מאמר',sub:'איך מאמר בנוי ואיפה מחפשים כל דבר',open:true},
- {n:2,name:'פירמידת הראיות',sub:'איזה סוג מחקר זה, וכמה הוא שווה'},
- {n:3,name:'מה יכול להטעות',sub:'הטיות קלאסיות, עם דוגמאות מפסיכיאטריה'},
- {n:4,name:'מספרים בלי פחד',sub:'p-value, CI, NNT ו-effect size מאפס'},
- {n:5,name:'סקירות ו-GRADE',sub:'מטא-אנליזות, הטיית פרסום, מקרה Turner'},
- {n:6,name:'זירת הדירוג',sub:'מדרגים מאמרים אמיתיים: לסמוך או לא?'},
- {n:7,name:'לחפש ולבקש',sub:'איך מוצאים מאמרים טובים ומה לבקש ממני'}
-];
+const SECTIONS=['Abstract','Introduction','Methods','Results','Discussion','Funding/COI'];
+const DESIGNS=['Case report/series','Cross-sectional','Case-control','Cohort','RCT','Meta-analysis'];
+const BIASES=['Selection bias','Confounding','Unblinding','Attrition','Regression to the mean','Selective reporting'];
+const CERTAINTY=['גבוהה','בינונית','נמוכה','נמוכה מאוד'];
 
-const STEPS=[
+const SVG_CI=`<svg class="fig" viewBox="0 0 320 135" role="img" aria-label="שלושה רווחי סמך מול קו אין השפעה">
+<line class="s-zero" x1="76" y1="12" x2="76" y2="112"/>
+<line class="s-ci" x1="132" y1="30" x2="244" y2="30"/><circle class="s-dot" cx="188" cy="30" r="5"/><text class="s-t" x="306" y="34">A</text>
+<line class="s-ci" x1="48" y1="65" x2="216" y2="65"/><circle class="s-dot" cx="132" cy="65" r="5"/><text class="s-t" x="306" y="69">B</text>
+<line class="s-ci" x1="84" y1="100" x2="104" y2="100"/><circle class="s-dot" cx="94" cy="100" r="5"/><text class="s-t" x="306" y="104">C</text>
+<text class="s-m" x="76" y="128" text-anchor="middle">0 = אין השפעה</text>
+<text class="s-m" x="250" y="128" text-anchor="middle">תועלת גדולה יותר</text>
+</svg>`;
+
+const SVG_FOREST=`<svg class="fig" viewBox="0 0 320 185" role="img" aria-label="forest plot של חמישה מחקרים ותוצאה מאוחדת">
+<line class="s-zero" x1="206.7" y1="10" x2="206.7" y2="162"/>
+<line class="s-ci" x1="57.3" y1="25" x2="206.7" y2="25"/><rect class="s-sq" x="128" y="21" width="8" height="8"/>
+<line class="s-ci" x1="122.7" y1="50" x2="197.3" y2="50"/><rect class="s-sq" x="153" y="43" width="14" height="14"/>
+<line class="s-ci" x1="113.3" y1="75" x2="262.7" y2="75"/><rect class="s-sq" x="184" y="71" width="8" height="8"/>
+<line class="s-ci" x1="94.7" y1="100" x2="188" y2="100"/><rect class="s-sq" x="136.3" y="95" width="10" height="10"/>
+<line class="s-ci" x1="141.3" y1="125" x2="290.7" y2="125"/><rect class="s-sq" x="212" y="121" width="8" height="8"/>
+<polygon class="s-dia" points="139.5,150 161.9,143 184.3,150 161.9,157"/>
+<text class="s-t" x="10" y="29">1</text><text class="s-t" x="10" y="54">2</text><text class="s-t" x="10" y="79">3</text><text class="s-t" x="10" y="104">4</text><text class="s-t" x="10" y="129">5</text><text class="s-t" x="10" y="154">Σ</text>
+<text class="s-m" x="110" y="178" text-anchor="middle">לטובת התרופה</text>
+<text class="s-m" x="262" y="178" text-anchor="middle">לטובת פלצבו</text>
+</svg>`;
+
+const SVG_FUNNEL=`<svg class="fig" viewBox="0 0 320 165" role="img" aria-label="funnel plot אסימטרי">
+<line class="s-dash" x1="160" y1="12" x2="40" y2="140"/><line class="s-dash" x1="160" y1="12" x2="280" y2="140"/>
+<line class="s-zero" x1="160" y1="12" x2="160" y2="140"/>
+<circle class="s-dot" cx="158" cy="24" r="4.5"/><circle class="s-dot" cx="148" cy="40" r="4.5"/><circle class="s-dot" cx="170" cy="46" r="4.5"/>
+<circle class="s-dot" cx="138" cy="64" r="4.5"/><circle class="s-dot" cx="164" cy="70" r="4.5"/><circle class="s-dot" cx="118" cy="94" r="4.5"/>
+<circle class="s-dot" cx="146" cy="100" r="4.5"/><circle class="s-dot" cx="92" cy="120" r="4.5"/><circle class="s-dot" cx="110" cy="130" r="4.5"/><circle class="s-dot" cx="70" cy="134" r="4.5"/>
+<circle class="s-miss" cx="225" cy="115" r="24"/><text class="s-t" x="225" y="120" text-anchor="middle">?</text>
+<text class="s-m" x="160" y="158" text-anchor="middle">מחקרים קטנים ושליליים חסרים בצד ימין</text>
+</svg>`;
+
+const PROMPT_SEARCH=`חפש לי ב-PubMed סקירות שיטתיות ו-RCTs מ-5 השנים האחרונות על:
+[טיפול] ב-[מצב קליני] אצל [אוכלוסייה].
+לכל מאמר תן: כותרת, שנה, כתב עת, PMID או DOI, סוג המחקר, מספר משתתפים,
+התוצאה הראשית עם גודל השפעה ורווח סמך, ומגבלה מרכזית אחת.
+סדר לפי עוצמת הראיות. אל תמציא מקורות: אם אינך בטוח שמאמר קיים, כתוב זאת.`;
+
+const PROMPT_APPRAISE=`נתח את המאמר המצורף לפי 5 השאלות:
+1. מה שאלו (PICO)?
+2. איזה סוג מחקר, והאם הוא מתאים לשאלה?
+3. מה יכול היה להטעות (הטיות לפי RoB 2, ערפלנים, נשירה, סמיות)?
+4. כמה גדולה ההשפעה (הפרש, רווח סמך, NNT/NNH, מול סף משמעות קלינית)?
+5. כמה אפשר לסמוך, ברמות GRADE, והאם זה רלוונטי למטופל שלי?
+בסוף: 3 דגלים אדומים, 3 נקודות חוזק, ו-3 שאלות לשאול ב-journal club.`;
+
+const PROMPT_JC=`הכן לי טיוטה למצגת journal club של 10 דקות על המאמר המצורף:
+שקף לשאלה הקלינית ו-PICO, שקף לשיטות, שקף ל-Figure 1,
+שקף לתוצאה הראשית עם NNT, שקף לחולשות, שקף לדירוג GRADE,
+ושקף אחרון: "מה זה אומר למטופל שלנו מחר בבוקר".`;
+
+const LEVELS=[
+/* ---------- LEVEL 1 ---------- */
+{n:1,name:'אנטומיה של מאמר',sub:'איך מאמר בנוי ואיפה מחפשים כל דבר',
+steps:[
  {t:'card',title:'מאמר הוא טיעון, לא עובדה',term:'Critical appraisal',
   body:'<p>כל מאמר מנסה לשכנע אותך במשהו. התפקיד שלך הוא לא לזכור את המסקנה, אלא לבדוק אם הטיעון מחזיק.</p><p>בכל מאמר, בלי יוצא מן הכלל, נשאל את אותן חמש שאלות:</p>',
   visual:'<ol class="five"><li><span><b>מה שאלו?</b> מי, מה, מול מה, ומה מדדו</span></li><li><span><b>איזה סוג מחקר?</b> ואיפה הוא בפירמידה</span></li><li><span><b>מה יכול היה להטעות?</b> הטיות, ערפלנים, מקרה</span></li><li><span><b>כמה גדולה ההשפעה באמת?</b> לא רק "מובהק"</span></li><li><span><b>האם זה רלוונטי למטופל שלי?</b> ואפשר לסמוך?</span></li></ol>',
@@ -157,7 +251,6 @@ const STEPS=[
  {t:'q',q:'באיזה חלק תמצא איך נבחרו המשתתפים ואיך חולקו לקבוצות?',
   opts:['Introduction','Methods','Results','Discussion'],a:1,
   ex:'ב-Methods. זה החלק שמתאר מה עשו בפועל: מי נכלל, איך חולקו לקבוצות, מה מדדו ומתי.'},
-
  {t:'card',title:'הכותרת והתקציר',term:'Title + Abstract',
   body:'<p>התקציר הוא בערך 250 מילה שמסכמות הכל, בדרך כלל בארבע כותרות: <span class="en">Background, Methods, Results, Conclusions</span>.</p><p>הוא מצוין כדי להחליט אם להמשיך לקרוא, ומסוכן כדי להחליט מה לעשות עם מטופל. החוקרים לפעמים מציגים בו תוצאה חלשה כחזקה. לזה קוראים <span class="en">spin</span>.</p>',
   visual:'<div class="paper"><strong>Results:</strong> The primary outcome (MADRS change at week 8) did not differ significantly between groups. Patients receiving drug X showed greater improvement in sleep quality.<br><br><strong>Conclusions:</strong> <mark>Drug X is a promising treatment for depression</mark>, with benefits on sleep.</div><p class="note">דוגמה מומצאת. שימו לב: המדד הראשי נכשל, והמסקנה עדיין נשמעת חיובית.</p>',
@@ -165,7 +258,6 @@ const STEPS=[
  {t:'q',q:'התקציר אומר: "Drug X is effective and well tolerated". מה נכון?',
   opts:['אפשר לסמוך, כי המאמר עבר peer review','התקציר הוא הסיכום של החוקרים עצמם. בודקים את המספרים ואת השיטות לפני שמאמינים','אם זה בכתב עת מוכר, המסקנה מדויקת','תקציר תמיד מדויק יותר מהמאמר המלא'],a:1,
   ex:'Peer review לא מבטיח שהמסקנה מדויקת. תקציר נכתב בידי החוקרים, ומחקרים מראים ש-spin בתקצירים נפוץ. הבדיקה האמיתית נעשית ב-Methods וב-Results.'},
-
  {t:'card',title:'המבוא ושאלת המחקר',term:'Introduction → PICO',
   body:'<p>המבוא מסביר מה עדיין לא ידוע (<span class="en">the gap</span>) ונגמר בשאלת המחקר. את השאלה מפרקים לארבעה חלקים, שנקראים <span class="en">PICO</span>:</p>',
   visual:'<div class="pico"><div><b>P</b><i>Population</i>מבוגרים עם דיכאון שלא הגיב לשתי תרופות</div><div><b>I</b><i>Intervention</i><span class="en">esketamine</span> בתרסיס לאף</div><div><b>C</b><i>Comparison</i>תרסיס פלצבו (וכולם מקבלים נוגד דיכאון חדש)</div><div><b>O</b><i>Outcome</i>שינוי בציון <span class="en">MADRS</span> אחרי 4 שבועות</div></div>',
@@ -173,7 +265,6 @@ const STEPS=[
  {t:'q',q:'מחקר: מבוגרים עם דיכאון עמיד קיבלו קטמין תוך-ורידי או מידזולם, ומדדו MADRS אחרי 24 שעות. מה ה-C?',
   opts:['מבוגרים עם דיכאון עמיד','קטמין','מידזולם','ציון MADRS אחרי 24 שעות'],a:2,
   ex:'מידזולם הוא קבוצת ההשוואה. בחרו בו כ-active placebo: לקטמין יש תחושות דיסוציאטיביות בולטות, ומטופל שמקבל מי מלח היה מנחש מיד שהוא בקבוצת הפלצבו. מידזולם גורם לתחושה מורגשת, וכך שומר על הסמיות. כבר כאן רואים איך פרט ב-PICO משפיע על האמינות.'},
-
  {t:'card',title:'Methods: לב המאמר',term:'Methods',
   body:'<p>כאן מחליטים אם אפשר לסמוך על המאמר. מחפשים ארבעה דברים:</p>',
   visual:'<ul class="checklist"><li><b>מי נכלל?</b> <span class="en">inclusion / exclusion criteria</span>. האם הם דומים למטופלים שלך? הרבה מחקרים מוציאים מטופלים אובדניים או עם תחלואה כפולה.</li><li><b>איך חולקו לקבוצות?</b> <span class="en">randomization</span>. הגרלה אמיתית, או שהרופא בחר?</li><li><b>מי ידע מה קיבל?</b> <span class="en">blinding</span>. המטופל, המטפל, ומי שמילא את השאלון.</li><li><b>מה מדדו ומתי?</b> <span class="en">primary outcome</span>. איזה סולם, ואחרי כמה זמן.</li></ul>',
@@ -181,7 +272,6 @@ const STEPS=[
  {t:'q',q:'ניסוי בנוגד דיכאון חדש נמשך 6 שבועות. מה הכי חשוב להבין מזה?',
   opts:['התרופה בטוחה לשימוש ממושך','אפשר להסיק רק על השפעה קצרת טווח. על מניעת הישנות ועל שימוש של שנים המחקר לא עונה','6 שבועות זה מספיק כדי לדעת הכל','משך המחקר לא משנה, רק התוצאה'],a:1,
   ex:'משך המעקב הוא חלק מה-O ב-PICO. במחקר של 6 שבועות אי אפשר לדעת על הישנות, על תופעות לוואי מאוחרות או על הפסקת טיפול. זה ממצא נפוץ מאוד בניסויים פסיכיאטריים.'},
-
  {t:'card',title:'Results: המספרים',term:'Figure 1 + Table 1',
   body:'<p>לפני שמסתכלים על p-value, בודקים שני דברים:</p><p><b>Figure 1</b> (תרשים זרימה, <span class="en">CONSORT</span>): כמה גויסו וכמה נשרו בדרך.<br><b>Table 1</b>: האם הקבוצות היו דומות בהתחלה (גיל, חומרה, מין).</p>',
   visual:'<div class="flow"><div class="box">Screened: 412</div><div class="arrow">↓</div><div class="box">Randomized: 300</div><div class="arrow">↓</div><div class="split"><div class="box">Drug X: 150<br><span class="drop">dropped out: 41</span></div><div class="box">Placebo: 150<br><span class="drop">dropped out: 18</span></div></div></div><p class="note">דוגמה מומצאת. פי שניים נשירה בקבוצת התרופה. למה? אולי תופעות לוואי.</p>',
@@ -189,15 +279,13 @@ const STEPS=[
  {t:'q',q:'גויסו 300 מטופלים ו-120 נשרו לפני סוף המחקר. מה הבעיה העיקרית?',
   opts:['אין בעיה, 180 זה מספיק','מי שנשאר כנראה שונה ממי שעזב (למשל, מי שסבל מתופעות לוואי עזב), ולכן התוצאה עלולה להיות מוטה','הבעיה היחידה היא שהמחקר יקר יותר','נשירה משפיעה רק על תופעות הלוואי'],a:1,
   ex:'נשירה של 40% היא דגל אדום. מי שנשאר במחקר הוא לרוב מי שהרגיש טוב יותר או סבל פחות. נלמד ברמה 3 איך החוקרים מנסים לתקן את זה (intention-to-treat).'},
-
  {t:'card',title:'Discussion: הפרשנות',term:'Discussion → Limitations',
   body:'<p>כאן החוקרים מספרים לך מה לחשוב על התוצאות. זה החלק הכי פחות אובייקטיבי במאמר.</p><p>אבל יש בו אוצר: פסקת ה-<span class="en">Limitations</span>, שבה החוקרים עצמם כותבים מה חלש במחקר.</p>',
-  visual:'<div class="quote"><span class="tag" style="color:var(--muted)">פרשנות. קוראים בחשדנות</span><span class="en">"These findings support the use of drug X as a first-line treatment…"</span></div><div class="quote"><span class="tag" style="color:var(--good)">זהב. קוראים תמיד</span><span class="en">"Our study has several limitations. First, the follow-up was only 8 weeks…"</span></div>',
+  visual:'<div class="quote"><span class="tag tag-muted">פרשנות. קוראים בחשדנות</span><span class="en">"These findings support the use of drug X as a first-line treatment…"</span></div><div class="quote"><span class="tag tag-good">זהב. קוראים תמיד</span><span class="en">"Our study has several limitations. First, the follow-up was only 8 weeks…"</span></div>',
   take:'קרא תמיד את ה-Limitations, ושאל את עצמך: מה הם לא כתבו שם?'},
  {t:'q',q:'איפה תמצא את מה שהחוקרים עצמם חושבים שחלש במחקר?',
   opts:['Abstract','Methods','בפסקת ה-Limitations שבתוך ה-Discussion','Funding'],a:2,
   ex:'ברוב המאמרים יש פסקת Limitations בתוך ה-Discussion. היא לא תמיד שלמה, אבל היא נקודת התחלה מצוינת.'},
-
  {t:'card',title:'החלקים הנסתרים',term:'Funding · COI · Registration · Supplement',
   body:'<p>בסוף המאמר, באותיות קטנות, מסתתר מידע חשוב:</p>',
   visual:'<ul class="checklist"><li><b>Funding.</b> מי שילם על המחקר.</li><li><b>Conflicts of interest.</b> קשרים כספיים של החוקרים, למשל ייעוץ לחברת התרופות.</li><li><b>Trial registration.</b> מספר <span class="en">NCT</span>. האם תוכנית המחקר נרשמה מראש.</li><li><b>Supplementary material.</b> שם מסתתרות הרבה פעמים תוצאות משניות ותופעות לוואי.</li></ul>',
@@ -205,7 +293,6 @@ const STEPS=[
  {t:'q',q:'מחקר מומן על ידי החברה שמייצרת את התרופה. מה המסקנה הנכונה?',
   opts:['המחקר פסול, אפשר להתעלם ממנו','זה לא משנה כלום','זה לא פוסל את המחקר, אבל מעלה עירנות: בודקים רישום מראש, מול מה השוו, ואם המדד הראשי השתנה','רק מחקרים ממשלתיים אמינים'],a:2,
   ex:'רוב ניסויי התרופות ממומנים בידי התעשייה, ורבים מהם טובים. המימון הוא סיבה לבדוק בזהירות את ההשוואה (למשל מינון נמוך מדי לתרופה המתחרה), את המדדים ואת הרישום.'},
-
  {t:'card',title:'סדר הקריאה של מומחה',term:'The 10-minute scan',
   body:'<p>מומחים לא קוראים מאמר מההתחלה עד הסוף. זה הסדר:</p>',
   visual:'<ol class="seq"><li><span><b>Title + Abstract.</b> האם זה בכלל רלוונטי?</span></li><li><span><b>PICO מתוך Methods.</b> מי, מה, מול מה, מה מדדו</span></li><li><span><b>Figure 1 + Table 1.</b> נשירה ודמיון בין הקבוצות</span></li><li><span><b>Primary outcome ב-Results.</b> מה יצא במדד הראשי</span></li><li><span><b>Limitations.</b> מה החוקרים מודים שחלש</span></li><li><span><b>Funding + COI + Registration.</b></span></li><li><span><b>רק עכשיו: Conclusions.</b> האם הן תואמות את מה שראית?</span></li></ol>',
@@ -213,13 +300,11 @@ const STEPS=[
  {t:'q',q:'יש לך 10 דקות לפני journal club. מה הכי יעיל?',
   opts:['לקרוא את ה-Introduction בעיון','לקרוא רק את ה-Conclusions','Abstract, ואז PICO מה-Methods, ואז Figure 1 והמדד הראשי, ואז Limitations','לקרוא את ה-Discussion מההתחלה עד הסוף'],a:2,
   ex:'בדיוק הסריקה של 10 הדקות. ה-Conclusions נקראות אחרונות, כדי שתשפוט אותן לפי מה שראית ולא להפך.'}
-];
-
-const GAME_OPTS=['Abstract','Introduction','Methods','Results','Discussion','Funding/COI'];
-const GAME=[
+],
+game:{title:'איפה זה כתוב?',prompt:'מאיזה חלק במאמר נלקח המשפט?',opts:SECTIONS,ltr:true,items:[
  {s:'Patients aged 18–65 with a DSM-5 diagnosis of major depressive disorder and a MADRS score ≥ 22 were eligible.',he:'מטופלים בגילאי 18–65 עם אבחנת דיכאון מז\'ורי לפי DSM-5 וציון MADRS של 22 ומעלה היו כשירים להשתתף.',a:2,ex:'קריטריוני הכללה (inclusion criteria) נמצאים תמיד ב-Methods.'},
  {s:'Depression affects more than 280 million people worldwide, and about one third do not respond to two adequate antidepressant trials.',he:'דיכאון פוגע ביותר מ-280 מיליון בני אדם, ובערך שליש לא מגיבים לשני ניסיונות טיפול מספקים.',a:1,ex:'רקע כללי ונתוני שכיחות פותחים את ה-Introduction. זה החלק הרחב של שעון החול.'},
- {s:'At week 8, the mean change in MADRS score was −14.2 with drug X and −11.9 with placebo (difference −2.3; 95% CI −4.1 to −0.5).',he:'בשבוע 8, השינוי הממוצע ב-MADRS היה 14.2- בתרופה ו-11.9- בפלצבו (הפרש 2.3-; רווח סמך 95% מ-4.1- עד 0.5-).',a:3,ex:'מספרים, הפרשים ורווחי סמך, בלי פרשנות. זה Results. (שימו לב: הפרש של 2.3 נקודות ב-MADRS. האם זה משמעותי קלינית? נחזור לזה ברמה 4.)'},
+ {s:'At week 8, the mean change in MADRS score was −14.2 with drug X and −11.9 with placebo (difference −2.3; 95% CI −4.1 to −0.5).',he:'בשבוע 8, הציון ירד ב-14.2 נקודות בתרופה וב-11.9 בפלצבו. ההפרש: 2.3 נקודות, עם רווח סמך בין 0.5 ל-4.1.',a:3,ex:'מספרים, הפרשים ורווחי סמך, בלי פרשנות. זה Results. (הפרש של 2.3 נקודות ב-MADRS: האם זה משמעותי קלינית? נחזור לזה ברמה 4.)'},
  {s:'Our findings suggest that drug X may be a valuable addition to the treatment options for depression.',he:'הממצאים שלנו מרמזים שתרופה X עשויה להיות תוספת חשובה לאפשרויות הטיפול בדיכאון.',a:4,ex:'פרשנות ו"מה זה אומר". Discussion. שימו לב למילים may ו-suggest.'},
  {s:'This study was funded by Pharma Inc. Dr. A has received consulting fees from Pharma Inc.',he:'המחקר מומן על ידי Pharma Inc. ד"ר A קיבל דמי ייעוץ מ-Pharma Inc.',a:5,ex:'מימון וניגוד עניינים, בסוף המאמר.'},
  {s:'Participants were randomly assigned in a 1:1 ratio using a computer-generated sequence, stratified by site.',he:'המשתתפים חולקו באקראי ביחס 1:1 לפי רצף שנוצר במחשב, עם ריבוד לפי מרכז.',a:2,ex:'איך עשו את ההגרלה (randomization). Methods.'},
@@ -227,19 +312,384 @@ const GAME=[
  {s:'Of 412 patients screened, 300 were randomized; 59 discontinued before week 8.',he:'מתוך 412 שנבדקו, 300 עברו הגרלה; 59 הפסיקו לפני שבוע 8.',a:3,ex:'מה קרה למשתתפים בפועל: Results, ובדרך כלל גם Figure 1.'},
  {s:'We hypothesized that adding drug X to SSRI treatment would reduce depressive symptoms more than placebo.',he:'שיערנו שהוספת תרופה X לטיפול ב-SSRI תפחית תסמיני דיכאון יותר מפלצבו.',a:1,ex:'ההשערה ושאלת המחקר סוגרות את ה-Introduction.'},
  {s:'Results: In this 8-week randomized trial (n = 300), drug X reduced depressive symptoms. Conclusions: Drug X is effective and well tolerated.',he:'תוצאות: בניסוי של 8 שבועות (300 משתתפים) התרופה הפחיתה תסמינים. מסקנות: התרופה יעילה ונסבלת היטב.',a:0,ex:'כותרות קצרות של Results ו-Conclusions באותה פסקה. זה סימן ההיכר של Abstract.'},
- {s:'The trial was registered at ClinicalTrials.gov (NCT number) before enrollment began.',he:'הניסוי נרשם ב-ClinicalTrials.gov לפני תחילת הגיוס.',a:2,ex:'הרישום מופיע בדרך כלל ב-Methods (ולעיתים גם בתקציר). רישום לפני הגיוס הוא סימן טוב.'},
+ {s:'The trial was registered at ClinicalTrials.gov before enrollment began.',he:'הניסוי נרשם ב-ClinicalTrials.gov לפני תחילת הגיוס.',a:2,ex:'הרישום מופיע בדרך כלל ב-Methods (ולעיתים גם בתקציר). רישום לפני הגיוס הוא סימן טוב.'},
  {s:'The primary outcome was change from baseline to week 8 in MADRS total score, assessed by raters blinded to treatment allocation.',he:'המדד הראשי היה השינוי בציון MADRS משבוע 0 עד שבוע 8, שנמדד בידי מעריכים שלא ידעו מי קיבל מה.',a:2,ex:'הגדרת המדד הראשי ומי עשה את ההערכה. Methods.'}
+]},
+summary:'Methods קובע את האמינות. Abstract ו-Discussion הם הפרשנות של החוקרים. Figure 1, Limitations ו-Funding הם המקומות שבהם מסתתרים הדגלים האדומים.',
+homework:'בפעם הבאה שתפתח מאמר, נסה רק לנסח את ה-PICO שלו בשורה אחת.'},
+
+/* ---------- LEVEL 2 ---------- */
+{n:2,name:'פירמידת הראיות',sub:'איזה סוג מחקר זה, וכמה הוא שווה',
+steps:[
+ {t:'card',title:'לא כל המחקרים שווים',term:'Hierarchy of evidence',
+  body:'<p>סוגי מחקר שונים חשופים בדרגה שונה לטעויות. ככל שעולים בפירמידה, קטן הסיכוי שהתוצאה נובעת מהטיה.</p>',
+  visual:'<div class="pyramid"><div style="width:34%"><b>Systematic review</b>מטא-אנליזה</div><div style="width:46%"><b>RCT</b>ניסוי אקראי מבוקר</div><div style="width:58%"><b>Cohort</b>מחקר עוקבה</div><div style="width:70%"><b>Case-control</b>מקרה-ביקורת</div><div style="width:82%"><b>Cross-sectional</b>מחקר חתך</div><div style="width:94%"><b>Case report / series</b>תיאורי מקרה</div><div style="width:100%"><b>Expert opinion</b>דעת מומחה</div></div>',
+  take:'הפירמידה היא קיצור דרך, לא חוק. RCT גרוע יכול להיות פחות אמין ממחקר עוקבה מצוין. ברמה 5 נלמד את GRADE, שמתקן את זה.'},
+ {t:'q',q:'איזה סוג מחקר נמצא בדרך כלל הכי גבוה בפירמידה?',
+  opts:['RCT בודד וגדול','סקירה שיטתית ומטא-אנליזה של RCTs טובים','מחקר עוקבה של מיליון איש','דעה של מומחה מוביל'],a:1,
+  ex:'סקירה שיטתית של כמה ניסויים טובים מאחדת יותר מידע ומפחיתה את השפעת המקרה. אבל היא טובה רק כמו המחקרים שבתוכה.'},
+ {t:'card',title:'תיאור מקרה',term:'Case report · Case series',
+  body:'<p>תיאור של מטופל אחד או של כמה מטופלים. אין קבוצת השוואה, ולכן אי אפשר להסיק ממנו סיבתיות.</p><p>אבל זה הכלי הכי טוב לגלות תופעות חדשות ונדירות.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>פינלנד, 1975: דווח על מקבץ מקרים של אגרנולוציטוזיס, חלקם קטלניים, אצל מטופלים שקיבלו <span class="en">clozapine</span>. התרופה הוסרה מהשוק במדינות רבות, וחזרה רק שנים אחר כך, עם ניטור ספירת דם קבוע.</div>',
+  take:'תיאור מקרה מעלה השערה. הוא לא מוכיח אותה.'},
+ {t:'card',title:'מחקר חתך: צילום רגע',term:'Cross-sectional study',
+  body:'<p>בודקים קבוצה בנקודת זמן אחת: מי חשוף ומי חולה. מצוין לשאלות של שכיחות (<span class="en">prevalence</span>). חלש בשאלות של סיבה, כי לא יודעים מה קרה קודם.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה</span>סקר: בני נוער שמשתמשים ברשתות חברתיות יותר מ-3 שעות ביום מדווחים על יותר תסמיני דיכאון. האם הרשתות גורמות לדיכאון? או שבני נוער מדוכאים מבלים יותר ברשתות?</div>',
+  take:'השאלה "מה קדם למה" נקראת reverse causation. נפגוש אותה שוב.'},
+ {t:'q',q:'מחקר חתך מצא שאנשים עם חרדה שותים יותר קפה. מה הבעיה העיקרית במסקנה "קפה גורם לחרדה"?',
+  opts:['המדגם קטן מדי','לא ידוע מה קדם למה, ויכולים להיות גורמים משותפים אחרים','קפה לא נמדד כראוי','אין בעיה, זה קשר ברור'],a:1,
+  ex:'במחקר חתך אין ציר זמן. אולי אנשים חרדים ישנים פחות ושותים יותר קפה. אולי מתח בעבודה מעלה גם חרדה וגם צריכת קפה.'},
+ {t:'card',title:'מקרה-ביקורת: מהתוצאה אחורה',term:'Case-control study',
+  body:'<p>מתחילים מאנשים שכבר חולים (<span class="en">cases</span>) ומשווים לאנשים דומים שאינם חולים (<span class="en">controls</span>). שואלים: למי הייתה יותר חשיפה בעבר?</p><p>מתאים מאוד למחלות נדירות. החולשה: זיכרון. חולים נוטים לחפש ולזכור חשיפות יותר מבריאים (<span class="en">recall bias</span>).</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>מחקר EU-GEI (פורסם ב-Lancet Psychiatry, 2019): מטופלים באפיזודה פסיכוטית ראשונה הושוו לאנשים מהאוכלוסייה הכללית, בכמה ערים באירופה. שימוש יומי בקנאביס חזק היה נפוץ הרבה יותר בקבוצת המטופלים.</div>',
+  take:'מחקר מקרה-ביקורת מודד odds ratio. נלמד אותו ברמה 4.'},
+ {t:'card',title:'מחקר עוקבה: קדימה בזמן',term:'Cohort study',
+  body:'<p>עוקבים אחרי קבוצה לאורך זמן ומשווים בין חשופים ללא חשופים. כאן ברור מה קדם למה.</p><p>החולשה: החשופים שונים מהלא חשופים בעוד הרבה דברים (<span class="en">confounding</span>).</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>מחקר שפורסם ב-Lancet ב-1987: כ-45,000 מתגייסים לצבא השוודי נשאלו על שימוש בקנאביס ונעקבו 15 שנה. ככל שהשימוש היה כבד יותר, הסיכון לסכיזופרניה היה גבוה יותר.</div>',
+  take:'יחסי מינון-תגובה (dose-response), כלומר יותר חשיפה ויותר סיכון, מחזקים את הטענה לסיבתיות, אבל לא מוכיחים אותה.'},
+ {t:'q',q:'רוצים לבדוק אם תרופה מסוימת בהריון קשורה למום מולד נדיר מאוד. איזה מחקר הכי מעשי?',
+  opts:['RCT בנשים הרות','מחקר מקרה-ביקורת, או עוקבה גדולה ממאגרי מידע','תיאור מקרה אחד','סקר חתך בקרב רופאים'],a:1,
+  ex:'RCT לבדיקת נזק בהריון אינו אתי וגם לא יגייס מספיק משתתפים לאירוע נדיר. מאגרי מידע גדולים ומחקרי מקרה-ביקורת הם הכלי המתאים.'},
+ {t:'card',title:'ניסוי אקראי מבוקר: ההגרלה',term:'RCT · Randomized controlled trial',
+  body:'<p>החוקרים מגרילים מי יקבל טיפול ומי ביקורת. ההגרלה יוצרת קבוצות דומות גם בגורמים שאף אחד לא חשב למדוד.</p><p>זו הסיבה המרכזית שבגללה RCT עומד מעל מחקרי תצפית בשאלות של יעילות טיפול.</p>',
+  visual:'<div class="compare"><div><b>מחקר תצפית</b>הרופא בחר מי מקבל את התרופה. אולי דווקא את החולים הקשים, או את אלה שמגיעים לביקורות.</div><div><b>RCT</b>הגרלה החליטה. ההבדלים בין הקבוצות הם רק מקריים.</div></div>',
+  take:'RCT מצוין לשאלות יעילות. אבל הוא לרוב קצר, קטן מדי לנזקים נדירים, ומוציא מטופלים "מסובכים".'},
+ {t:'card',title:'סקירה שיטתית ומטא-אנליזה',term:'Systematic review · Meta-analysis',
+  body:'<p>סקירה שיטתית מחפשת את כל המחקרים על שאלה מסוימת, לפי שיטה שהוגדרה מראש. מטא-אנליזה מאחדת את המספרים שלהם לתוצאה אחת.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>Cipriani ושותפיו, Lancet 2018: מטא-אנליזת רשת של 522 ניסויים עם 116,477 משתתפים. כל 21 נוגדי הדיכאון שנבדקו היו יעילים יותר מפלצבו בטיפול חריף במבוגרים, בהבדלים צנועים.</div>',
+  take:'Garbage in, garbage out: מטא-אנליזה של מחקרים מוטים תיתן תוצאה מוטה, רק בביטחון רב יותר.'},
+ {t:'q',q:'מטא-אנליזה איחדה 15 מחקרים קטנים, רובם בלי סמיות. מה נכון?',
+  opts:['היא בהכרח אמינה, כי היא בראש הפירמידה','האמינות שלה מוגבלת לאיכות המחקרים שבתוכה','מטא-אנליזה תמיד עדיפה על RCT גדול','מחקרים בלי סמיות לא נכנסים למטא-אנליזות'],a:1,
+  ex:'מטא-אנליזה לא מתקנת פגמים במחקרים שבתוכה. היא רק מצרפת אותם. לכן סקירה טובה בודקת את סיכון ההטיה בכל מחקר.'},
+ {t:'card',title:'איזה מחקר לאיזו שאלה',term:'Study design ↔ question',
+  body:'<p>השאלה הראשונה מול כל מאמר: האם סוג המחקר מתאים לשאלה שהוא מנסה לענות עליה?</p>',
+  visual:'<ul class="checklist"><li><b>יעילות טיפול</b> · RCT, וסקירה שיטתית של RCTs</li><li><b>נזק נדיר או מאוחר</b> · עוקבה גדולה, מקרה-ביקורת</li><li><b>פרוגנוזה</b> · מחקר עוקבה</li><li><b>שכיחות</b> · מחקר חתך</li><li><b>דיוק של כלי אבחון</b> · מחקר חתך מול "תקן זהב"</li><li><b>תופעה חדשה</b> · תיאורי מקרה</li></ul>',
+  take:'מחקר "נמוך" בפירמידה יכול להיות הכלי הנכון לשאלה מסוימת.'},
+ {t:'q',q:'רוצים לדעת מה הסיכוי של מטופל אחרי אפיזודה פסיכוטית ראשונה לחזור לעבודה תוך 5 שנים. איזה מחקר?',
+  opts:['RCT','מחקר עוקבה','מחקר מקרה-ביקורת','תיאור מקרה'],a:1,
+  ex:'שאלות של פרוגנוזה, "מה יקרה לאורך זמן", נענות הכי טוב במחקר עוקבה שעוקב אחרי מטופלים מנקודת ההתחלה.'}
+],
+game:{title:'איזה מחקר זה?',prompt:'זהה את סוג המחקר:',opts:DESIGNS,items:[
+ {s:'200 מטופלים עם OCD חולקו בהגרלה לטיפול CBT או לרשימת המתנה.',a:4,ex:'הגרלה בין קבוצות היא סימן ההיכר של RCT.'},
+ {s:'החוקרים איחדו את התוצאות של 30 ניסויים על ליתיום ומניעת אובדנות לתוצאה אחת.',a:5,ex:'איחוד מספרי של כמה מחקרים הוא מטא-אנליזה.'},
+ {s:'תיאור של מטופל בן 34 שפיתח מאניה שבועיים אחרי תחילת טיפול בסטרואידים.',a:0,ex:'מטופל אחד, בלי השוואה: תיאור מקרה.'},
+ {s:'סקר בקרב 5,000 סטודנטים: כמה מהם עומדים כרגע בקריטריונים לדיכאון.',a:1,ex:'נקודת זמן אחת ושאלת שכיחות: מחקר חתך.'},
+ {s:'נבחרו 300 מטופלים עם דמנציה ו-600 בני אותו גיל בלי דמנציה, ונבדק מי מהם נטל בנזודיאזפינים בעשור הקודם.',a:2,ex:'מתחילים מהמחלה ומסתכלים אחורה על חשיפה: מקרה-ביקורת.'},
+ {s:'10,000 ילדים שנולדו בשנת 2000 נעקבו עד גיל 18, ונבדק אם התעללות בילדות קשורה להפרעות חרדה.',a:3,ex:'מעקב קדימה בזמן אחרי קבוצה: מחקר עוקבה.'},
+ {s:'רשומות של מיליון מבוטחים: מי שהתחיל SSRI ומי שלא, ומעקב של 5 שנים אחרי אירועי דימום.',a:3,ex:'גם מחקר ממאגרי מידע הוא עוקבה, אם עוקבים אחרי חשופים ולא חשופים לאורך זמן.'},
+ {s:'מטופלים עם דיכאון עמיד הוגרלו לטיפול ב-ECT או בקטמין.',a:4,ex:'הגרלה בין שני טיפולים פעילים. עדיין RCT.'},
+ {s:'שאלון אנונימי חד-פעמי לאחיות על שחיקה ועל שימוש באלכוהול.',a:1,ex:'מדידה חד-פעמית של שני דברים יחד: מחקר חתך. אי אפשר לדעת מה קדם למה.'},
+ {s:'איסוף כל המחקרים שפורסמו על פעילות גופנית לדיכאון, ושילוב התוצאות למספר אחד.',a:5,ex:'חיפוש שיטתי ואיחוד: סקירה שיטתית עם מטא-אנליזה.'},
+ {s:'חמישה מקרים של תסמונת סרוטונינית אחרי שילוב של טרמדול ו-SSRI במחלקה אחת.',a:0,ex:'כמה מקרים, בלי קבוצת השוואה: סדרת מקרים.'},
+ {s:'אנשים שמתו בהתאבדות הושוו לאנשים חיים בני אותו גיל ומין, ונבדקה הגישה לנשק חם בבית.',a:2,ex:'מתחילים מהתוצאה (התאבדות) ומשווים חשיפה בעבר: מקרה-ביקורת.'}
+]},
+summary:'כל סוג מחקר עונה טוב על שאלות מסוימות. RCT לשאלות טיפול, עוקבה לפרוגנוזה ולנזקים, מקרה-ביקורת למחלות נדירות, חתך לשכיחות. מטא-אנליזה טובה רק כמו המחקרים שבתוכה.',
+homework:'במאמר הבא שתקרא, זהה את סוג המחקר עוד לפני שתקרא את התקציר עד הסוף.'},
+
+/* ---------- LEVEL 3 ---------- */
+{n:3,name:'מה יכול להטעות',sub:'הטיות קלאסיות, עם דוגמאות מפסיכיאטריה',
+steps:[
+ {t:'card',title:'שלושה הסברים חלופיים',term:'Chance · Bias · Confounding',
+  body:'<p>לפני שמאמינים שטיפול עבד, או שחשיפה גרמה למחלה, שוללים שלושה הסברים:</p>',
+  visual:'<div class="three"><div><b>מקרה</b><span class="en">Chance</span>המדגם קטן, והתוצאה יצאה במזל.</div><div><b>הטיה</b><span class="en">Bias</span>טעות שיטתית בתכנון, במדידה או בניתוח.</div><div><b>ערפלן</b><span class="en">Confounding</span>גורם שלישי שמסביר את הקשר.</div></div>',
+  take:'ברמה הזו נלמד לזהות הטיות וערפלנים. במקרה נטפל ברמה 4.'},
+ {t:'card',title:'הטיית בחירה',term:'Selection bias',
+  body:'<p>מי שנכנס למחקר שונה ממי שאתה מטפל בו, או שהקבוצות שונות זו מזו כבר מההתחלה.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה נפוצה</span>ניסוי בנוגד דיכאון שמוציא מטופלים עם אובדנות, שימוש בחומרים ותחלואה גופנית. נשארים מטופלים "נקיים", שלרוב מגיבים טוב יותר. במרפאה שלך המטופלים נראים אחרת.</div>',
+  take:'שאל: האם המשתתפים דומים למטופל שיושב מולי? (המונח: external validity.)'},
+ {t:'card',title:'ערפלן',term:'Confounding',
+  body:'<p>גורם שלישי שקשור גם לחשיפה וגם לתוצאה, ויוצר קשר שנראה סיבתי.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>מחקרי תצפית מצאו קשר בין נטילת SSRI בהריון לבין אוטיזם בילד. אבל נשים שנוטלות SSRI הן נשים עם דיכאון וחרדה, ויש להן רקע גנטי וסביבתי שונה. במחקרים שהשוו בין אחים, הקשר נחלש מאוד. לזה קוראים <span class="en">confounding by indication</span>.</div>',
+  take:'בכל מחקר תצפיתי שאל: מה עוד שונה בין הקבוצות?'},
+ {t:'q',q:'מחקר תצפיתי: אנשים שעושים פעילות גופנית סובלים פחות מדיכאון. מה ההסבר החלופי?',
+  opts:['אין הסבר חלופי, פעילות גופנית מונעת דיכאון','אנשים מדוכאים זזים פחות, ואנשים בריאים יותר גם זזים יותר וגם פחות מדוכאים','המחקר בהכרח קטן מדי','זו הטיית פרסום'],a:1,
+  ex:'גם reverse causation (הדיכאון מוריד פעילות) וגם ערפלנים (בריאות כללית, הכנסה, תמיכה חברתית). כדי לבדוק סיבתיות צריך RCT, ואכן יש ניסויים כאלה.'},
+ {t:'card',title:'סמיות וציפייה',term:'Blinding · Placebo response',
+  body:'<p>בפסיכיאטריה התוצאה היא לרוב דירוג של תסמינים. אם המטופל או המעריך יודעים מה ניתן, הציפייה משנה את הדירוג. תגובת הפלצבו בניסויי דיכאון גבוהה מאוד.</p><p><b>Functional unblinding:</b> כשלטיפול יש תחושה ברורה, כמו קטמין, פסילוסיבין או תופעות לוואי בולטות, המשתתפים מנחשים באיזו קבוצה הם, גם בניסוי "כפול סמיות".</p>',
+  visual:'',
+  take:'שאל: האם המשתתפים יכלו לנחש? מאמרים טובים בודקים את זה ומדווחים.'},
+ {t:'q',q:'בניסוי פסילוסיבין מול פלצבו, רוב המשתתפים ניחשו נכון את הקבוצה שלהם. מה המשמעות?',
+  opts:['אין משמעות, הניסוי היה כפול סמיות','הסמיות נשברה, וחלק מההבדל עלול לנבוע מציפייה','הפסילוסיבין בהכרח לא עובד','צריך פשוט מדגם גדול יותר'],a:1,
+  ex:'כשהסמיות נשברת, הציפייה של המשתתף ושל המעריך נכנסת לתוצאה, במיוחד בשאלונים. מדגם גדול יותר לא פותר את זה.'},
+ {t:'card',title:'נשירה ו-ITT',term:'Attrition · Intention-to-treat',
+  body:'<p><b>Intention-to-treat (ITT):</b> מנתחים כל משתתף בקבוצה שאליה הוגרל, גם אם הפסיק את הטיפול. זה שומר על היתרון של ההגרלה.</p><p><b>Per-protocol:</b> מנתחים רק את מי שהשלים. זה נשמע הגיוני, אבל מי שהשלים הוא לרוב מי שהרגיש טוב יותר.</p>',
+  visual:'',
+  take:'בניסויי יעילות, ITT הוא ברירת המחדל הנכונה. ניתוח per-protocol בלבד הוא דגל צהוב.'},
+ {t:'q',q:'ניסוי מדווח רק ניתוח per-protocol, ו-30% נשרו מקבוצת התרופה. מה החשש?',
+  opts:['אין חשש','התוצאה עלולה להיות טובה מהמציאות, כי מי שסבל מתופעות לוואי או לא השתפר עזב','התוצאה בהכרח גרועה מהמציאות','זו בעיה רק אם המדגם קטן'],a:1,
+  ex:'מי שנשאר בקבוצת התרופה הוא קבוצה "מסוננת". ההשוואה כבר לא בין קבוצות מוגרלות.'},
+ {t:'card',title:'רגרסיה לממוצע',term:'Regression to the mean',
+  body:'<p>מטופלים מגיעים לטיפול, וגם למחקר, כשהם בשיא הקושי. גם בלי שום טיפול חלק ישתפרו ויחזרו לממוצע שלהם.</p><p>לכן מחקר בלי קבוצת ביקורת יראה כמעט תמיד "שיפור".</p>',
+  visual:'',
+  take:'"80% השתפרו" בלי קבוצת ביקורת לא אומר כמעט כלום.'},
+ {t:'q',q:'מחקר פתוח בלי קבוצת ביקורת: 70% מהמטופלים השתפרו אחרי חודש של טיפול חדש. מה נכון?',
+  opts:['הטיפול יעיל ב-70%','השיפור יכול לנבוע מרגרסיה לממוצע, מהמהלך הטבעי ומפלצבו. צריך קבוצת ביקורת','70% זה מעט מדי','זו הוכחה ברמה של RCT'],a:1,
+  ex:'בלי קבוצת ביקורת אין דרך להפריד את השפעת הטיפול מכל מה שקורה ממילא.'},
+ {t:'card',title:'דיווח סלקטיבי',term:'Selective reporting · Outcome switching',
+  body:'<p>החוקרים מודדים הרבה דברים, ומבליטים את מה שיצא טוב.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>Study 329 (פורסם ב-2001): ניסוי של פרוקסטין במתבגרים עם דיכאון. המאמר המקורי הציג את התרופה כיעילה ובטוחה, אף שהמדדים הראשיים שהוגדרו מראש לא הראו הבדל מובהק. ניתוח מחדש של הנתונים, שפורסם ב-BMJ ב-2015, מצא שהתרופה לא הייתה יעילה וגרמה ליותר נזקים, כולל אירועים אובדניים.</div>',
+  take:'השווה את המדד הראשי במאמר לזה שברישום (ClinicalTrials.gov). אם הם שונים, זה דגל אדום.'},
+ {t:'card',title:'ספין ותת-קבוצות',term:'Spin · Subgroup analysis',
+  body:'<p>מילים כמו "trend toward significance" או "may be beneficial" מנסות להפוך תוצאה שלילית לחיובית.</p><p><b>תת-קבוצות:</b> אם בודקים 20 תת-קבוצות, סביר שאחת "תצא מובהקת" במקרה. תוצאה בתת-קבוצה היא השערה לבדיקה, לא ממצא.</p>',
+  visual:'',
+  take:'כשהמדד הראשי נכשל, כל השאר הוא השערה.'},
+ {t:'q',q:'המדד הראשי לא הראה הבדל, אבל המאמר מדגיש תוצאה מובהקת אצל נשים מעל גיל 50. איך מתייחסים לזה?',
+  opts:['ממליצים על התרופה לנשים מעל 50','זו השערה שדורשת ניסוי חדש, כי תת-קבוצות יוצאות מובהקות במקרה','מתעלמים מכל המאמר','זה מוכיח שהתרופה עובדת'],a:1,
+  ex:'ממצא בתת-קבוצה, במיוחד כזה שלא הוגדר מראש, הוא סיבה לניסוי הבא ולא לשינוי בטיפול.'}
+],
+game:{title:'מצא את הפגם',prompt:'מה הבעיה המרכזית במחקר?',opts:BIASES,items:[
+ {s:'ניסוי של חודש לטיפול בדיכאון: 35% נשרו מקבוצת התרופה בגלל תופעות לוואי, והניתוח כלל רק את מי שסיים.',a:3,ex:'נשירה גבוהה וניתוח של המשלימים בלבד. ITT היה מגלה תמונה אחרת.'},
+ {s:'מחקר בלי קבוצת ביקורת: מטופלים שהגיעו למיון בשיא חרדה קיבלו תוסף צמחי, ואחרי שבועיים 75% השתפרו.',a:4,ex:'מגיעים בשיא, וחוזרים לממוצע. בלי ביקורת אין דרך לדעת אם התוסף עשה משהו.'},
+ {s:'המדד הראשי ברישום היה HAM-D בשבוע 8. במאמר, המדד הראשי הוא "שיפור בשינה", שיצא מובהק.',a:5,ex:'החלפת מדד ראשי (outcome switching). דגל אדום בוהק.'},
+ {s:'ניסוי מיקרודוזינג: רוב המשתתפים ניחשו נכון אם קיבלו את החומר, והשיפור נמדד בשאלון עצמי.',a:2,ex:'סמיות שבורה ומדד סובייקטיבי: שילוב שמנפח תוצאות.'},
+ {s:'מחקר תצפיתי: מטופלים שקיבלו טיפול פסיכולוגי פרטי השתפרו יותר ממטופלים במרפאה ציבורית.',a:1,ex:'הכנסה, השכלה, חומרת המחלה ותמיכה משפחתית שונות בין הקבוצות. אלה ערפלנים.'},
+ {s:'ניסוי לתרופה לסכיזופרניה גייס רק מטופלים שהגיבו בעבר היטב לתרופה דומה.',a:0,ex:'אוכלוסייה "מועשרת" שמגיבה טוב. התוצאה לא תחול על כלל המטופלים.'},
+ {s:'מחקר מצא שמי שאוכלים יותר ירקות מדוכאים פחות. לא נבדקו הכנסה, השכלה ופעילות גופנית.',a:1,ex:'אורח חיים בריא מגיע בחבילה. הירקות עשויים להיות רק סמן לגורמים אחרים.'},
+ {s:'מחקר על אפליקציה לחרדה גייס משתתפים דרך פרסום ברשתות: צעירים, משכילים, עם חרדה קלה.',a:0,ex:'המשתתפים לא מייצגים מטופלים עם חרדה קשה או מבוגרים.'},
+ {s:'אין הבדל במדד הראשי, אבל המאמר מדגיש תוצאה מובהקת בתת-קבוצה אחת מתוך 12 שנבדקו.',a:5,ex:'דיווח סלקטיבי של תת-קבוצה. במקרה לבד צפוי שאחת מ-12 תצא מובהקת.'},
+ {s:'בניסוי טיפול מול טיפול מדומה, המעריכים שמילאו את סולם הדיכאון ידעו מי קיבל טיפול אמיתי.',a:2,ex:'המעריך לא היה עיוור. הציפייה שלו נכנסת לדירוג.'},
+ {s:'ילדים עם ADHD שהגיעו למרפאה בגלל החמרה נמדדו שוב אחרי חודש של תוסף אומגה 3. רובם השתפרו.',a:4,ex:'החמרה היא נקודת שיא. חלק מהשיפור יקרה בכל מקרה.'},
+ {s:'טיפול חדש לאנורקסיה: 40% עזבו את קבוצת הטיפול, לעומת 10% בביקורת. התוצאות דווחו רק על המשלימים.',a:3,ex:'נשירה לא שווה בין הקבוצות. ההשוואה כבר לא הוגנת.'}
+]},
+summary:'מול כל תוצאה שאל: מקרה, הטיה או ערפלן? בפסיכיאטריה במיוחד: סמיות, נשירה, רגרסיה לממוצע ודיווח סלקטיבי.',
+homework:'במאמר הבא, חפש את ניתוח ה-ITT ואת שיעורי הנשירה בכל קבוצה.'},
+
+/* ---------- LEVEL 4 ---------- */
+{n:4,name:'מספרים בלי פחד',sub:'p-value, CI, NNT ו-effect size מאפס',
+steps:[
+ {t:'card',title:'למה צריך סטטיסטיקה',term:'Statistics in two questions',
+  body:'<p>כל מחקר בודק מדגם, לא את כל האנשים. הסטטיסטיקה עונה על שתי שאלות:</p>',
+  visual:'<div class="compare"><div><b>האם זה מקרי?</b>p-value ורווח סמך</div><div><b>כמה זה גדול?</b>הפרש, NNT, גודל אפקט</div></div>',
+  take:'השאלה השנייה חשובה יותר לקליניקה, והיא זו שהכי הרבה אנשים מדלגים עליה.'},
+ {t:'card',title:'p-value בשפה פשוטה',term:'p-value',
+  body:'<p>נניח שהתרופה לא עושה כלום. מה הסיכוי לראות, במקרה, הבדל גדול כמו שראינו או גדול יותר? זה ה-p-value.</p><p>p של 0.03 אומר: אם אין שום השפעה, תוצאה כזו תופיע במקרה בערך ב-3 מכל 100 ניסויים.</p>',
+  visual:'<div class="example"><span class="tag">אינטואיציה</span>מטבע נפל על "עץ" 9 פעמים מתוך 10. אם המטבע הוגן, זה נדיר מאוד, ולכן חושדים שהוא לא הוגן. זה כל הרעיון.</div>',
+  take:'p קטן לא אומר שההשפעה גדולה או חשובה. הוא רק אומר שקשה להסביר את התוצאה במקרה. הסף 0.05 הוא מוסכמה, לא חוק טבע.'},
+ {t:'q',q:'ניסוי עם 10,000 משתתפים: הבדל של נקודה אחת ב-HAM-D, ו-p של 0.001. מה נכון?',
+  opts:['התרופה מאוד יעילה','ההבדל כנראה אמיתי, אבל קטן מכדי שמטופל ירגיש אותו','התוצאה מקרית','p קטן אומר אפקט גדול'],a:1,
+  ex:'במדגם ענק גם הבדל זעיר יוצא מובהק. מובהקות סטטיסטית אינה משמעות קלינית.'},
+ {t:'card',title:'רווח סמך',term:'95% Confidence interval',
+  body:'<p>רווח סמך של 95% הוא טווח הערכים הסבירים להשפעה האמיתית. הוא אומר שני דברים בבת אחת: האם זה מקרי, וכמה זה גדול.</p>',
+  visual:SVG_CI+'<ul class="checklist"><li><b>A</b> · לא נוגע ב-0: מובהק, והשפעה ברורה.</li><li><b>B</b> · חוצה את 0: לא מובהק. ההשפעה יכולה להיות גם אפס. הטווח רחב, כלומר מעט מידע.</li><li><b>C</b> · לא נוגע ב-0 וצר: מובהק, אבל ההשפעה זעירה.</li></ul>',
+  take:'קו "אין השפעה" הוא 0 בהפרשים, ו-1 ביחסים (RR, OR).'},
+ {t:'q',q:'הפרש ב-MADRS לטובת התרופה: 2.3 נקודות, ורווח הסמך בין 0.5 ל-4.1. מה נכון?',
+  opts:['לא מובהק','מובהק, כי הרווח לא כולל 0. ההשפעה האמיתית יכולה להיות בין זעירה לבינונית','ההשפעה היא בדיוק 2.3','זה אומר ש-95% מהמטופלים ישתפרו'],a:1,
+  ex:'רווח הסמך לא כולל 0, לכן מובהק. אבל הקצה התחתון, חצי נקודה, הוא חסר משמעות קלינית. זה מידע שה-p-value לבד לא נותן.'},
+ {t:'card',title:'סיכון יחסי מול מוחלט',term:'Relative vs absolute risk',
+  body:'<p>הישנות של דיכאון בתוך שנה: 20% בפלצבו, 10% בתרופה.</p>',
+  visual:'<div class="compare"><div><b>הפחתה יחסית</b><span class="bignum">50%</span>"הסיכון ירד בחצי!"</div><div><b>הפחתה מוחלטת</b><span class="bignum">10%</span>מ-20 ל-10 מכל 100 מטופלים</div></div>',
+  take:'כותרות ופרסומות אוהבות סיכון יחסי. החלטות קליניות צריכות סיכון מוחלט.'},
+ {t:'card',title:'NNT ו-NNH',term:'Number needed to treat / harm',
+  body:'<p>NNT = 1 חלקי ההפחתה המוחלטת בסיכון. בדוגמה: 1 חלקי 0.10 = 10. צריך לטפל ב-10 מטופלים כדי למנוע הישנות אחת.</p><p>NNH הוא אותו חישוב, לתופעת לוואי.</p>',
+  visual:'<div class="people" aria-label="10 מטופלים, אחד מהם נהנה מהטיפול"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div><p class="note">מתוך 10 מטופלים שקיבלו את התרופה, אחד לא חזר לדיכאון בזכותה.</p>',
+  take:'בפסיכיאטריה, NNT בטווח של 5 עד 10 נחשב לרוב סביר. תמיד שוקלים אותו מול NNH ומול רצון המטופל.'},
+ {t:'q',q:'תגובה לטיפול: 50% בתרופה, 40% בפלצבו. מה ה-NNT?',
+  opts:['2','5','10','40'],a:2,
+  ex:'ההפרש המוחלט: 10 נקודות אחוז, כלומר 0.10. אחד חלקי 0.10 = 10.'},
+ {t:'q',q:'עלייה במשקל של יותר מ-7%: אצל 30% בתרופה ו-10% בפלצבו. מה ה-NNH?',
+  opts:['3','5','10','20'],a:1,
+  ex:'ההפרש: 20 נקודות אחוז, כלומר 0.20. אחד חלקי 0.20 = 5. על כל 5 מטופלים, אחד יעלה במשקל בגלל התרופה.'},
+ {t:'card',title:'גודל אפקט',term:'Effect size · SMD',
+  body:'<p>כשכל מחקר משתמש בסולם אחר, ממירים את ההבדל ליחידה משותפת: כמה סטיות תקן מפרידות בין הקבוצות.</p>',
+  visual:'<div class="scale"><span style="inset-inline-start:20%">0.2<br>קטן</span><span style="inset-inline-start:50%">0.5<br>בינוני</span><span style="inset-inline-start:80%">0.8<br>גדול</span><span class="mark" style="inset-inline-start:30%">נוגדי דיכאון מול פלצבו: בסביבות 0.3</span></div>',
+  take:'אפקט ממוצע קטן יכול להסתיר מטופלים שמגיבים מאוד לצד מטופלים שלא מגיבים בכלל.'},
+ {t:'card',title:'Odds ratio ו-Risk ratio',term:'OR · RR',
+  body:'<p>שתי דרכים לבטא יחס בין סיכונים בשתי קבוצות.</p><p>1 = אין הבדל. מעל 1 = יותר סיכון בקבוצה החשופה. מתחת ל-1 = פחות סיכון.</p><p>כשהתוצאה נדירה, השניים כמעט זהים. כשהיא שכיחה, OR נראה דרמטי יותר מ-RR.</p>',
+  visual:'',
+  take:'OR של 2 לא אומר "פי שניים מטופלים". תמיד חפש את הסיכון המוחלט.'},
+ {t:'q',q:'OR של 2.0 לפסיכוזה בקרב משתמשי קנאביס, עם רווח סמך בין 1.5 ל-2.7, ממחקר מקרה-ביקורת. מה נכון?',
+  opts:['קנאביס מכפיל את הסיכוי לפסיכוזה, זה מוכח','יש קשר מובהק, אבל ממחקר כזה לבד אי אפשר להוכיח סיבתיות','לא מובהק','הסיכון המוחלט לפסיכוזה הוא 2%'],a:1,
+  ex:'הרווח לא כולל 1, לכן מובהק. אבל זה מחקר תצפיתי: ערפלנים ו-reverse causation עדיין אפשריים.'},
+ {t:'card',title:'משמעות קלינית',term:'MCID · Minimal clinically important difference',
+  body:'<p>ההבדל הקטן ביותר שמטופל באמת מרגיש. ב-HAM-D, NICE השתמש בעבר בסף של 3 נקודות. ניסויים רבים בנוגדי דיכאון מראים הבדל ממוצע של כ-2 נקודות.</p>',
+  visual:'',
+  take:'שאל תמיד: האם ההבדל גדול מספיק כדי שהמטופל שלי ירגיש אותו?'}
+],
+game:{title:'מספרים בפעולה',prompt:'בחר את התשובה הנכונה:',items:[
+ {s:'תגובה: 60% בטיפול, 40% בביקורת. מה ה-NNT?',opts:['2','5','20','60'],a:1,ex:'ההפרש 0.20. אחד חלקי 0.20 = 5.'},
+ {s:'רווח סמך ל-RR: בין 0.8 ל-1.3. מה המסקנה?',opts:['מובהק לטובת הטיפול','לא מובהק, כי הרווח כולל 1','מובהק לטובת הביקורת','אי אפשר לדעת בלי p'],a:1,ex:'ביחסים, קו "אין השפעה" הוא 1. הרווח חוצה אותו.'},
+ {s:'RR של 0.5 להישנות. בפלצבו 4% חזרו לחלות. מה ההפחתה המוחלטת?',opts:['50%','2 נקודות אחוז','4 נקודות אחוז','0.5 נקודות אחוז'],a:1,ex:'מחצית מ-4% היא 2%. ההפחתה המוחלטת: מ-4% ל-2%, כלומר 2 נקודות אחוז. NNT של 50.'},
+ {s:'גודל אפקט (SMD) של 0.8. איך מתארים אותו?',opts:['קטן','בינוני','גדול','זניח'],a:2,ex:'0.2 קטן, 0.5 בינוני, 0.8 גדול.'},
+ {s:'פרסומת: "מפחית את הסיכון לאשפוז ב-50%". מה חסר כדי להבין?',opts:['ה-p-value','הסיכון המוחלט בלי הטיפול','שם החוקר','גודל המדגם בלבד'],a:1,ex:'50% מ-2% זה 1 נקודת אחוז. 50% מ-40% זה 20. אותה כותרת, משמעות שונה לגמרי.'},
+ {s:'OR של 1.05, p קטן מ-0.001, במדגם של 2 מיליון איש. מה נכון?',opts:['קשר חזק מאוד','מובהק, אבל ההשפעה זעירה','לא מובהק','זה מוכיח סיבתיות'],a:1,ex:'מדגם ענק מזהה הבדלים זעירים. OR של 1.05 הוא כמעט אפס השפעה.'},
+ {s:'רווח סמך ל-RR: בין 0.3 ל-3.5. מה זה אומר?',opts:['הטיפול מזיק','לא מובהק, ויש מעט מאוד מידע. כנראה מחקר קטן','הטיפול מועיל','מובהק מאוד'],a:1,ex:'הרווח כולל גם תועלת גדולה וגם נזק גדול. המחקר פשוט לא עונה על השאלה.'},
+ {s:'הבדל של 1.5 נקודות ב-HAM-D, עם p של 0.01. מה נכון?',opts:['מובהק סטטיסטית, וכנראה מתחת לסף המשמעות הקלינית','לא מובהק','משמעותי קלינית מאוד','אי אפשר לדעת'],a:0,ex:'מובהק, אבל 1.5 נקודות רחוק מסף של 3 נקודות שמטופלים מרגישים.'},
+ {s:'NNT של 6 לתגובה, ו-NNH של 20 להפסקת טיפול בגלל תופעות לוואי. מה המשמעות?',opts:['על כל 20 מטופלים שיגיבו, 6 יפסיקו','על כל 6 מטופלים שמטופלים, אחד מגיב בזכות התרופה. על כל 20, אחד מפסיק בגלל תופעות לוואי','התרופה לא כדאית','NNH תמיד חשוב יותר'],a:1,ex:'כך קוראים את שני המספרים יחד. כאן התועלת שכיחה יותר מהנזק.'},
+ {s:'בקבוצת התרופה 8% ניסו להתאבד, ובפלצבו 4%. מה ה-NNH?',opts:['4','25','50','100'],a:1,ex:'ההפרש 0.04. אחד חלקי 0.04 = 25. דוגמה מומצאת, לתרגול חישוב בלבד.'}
+]},
+summary:'p-value עונה "האם מקרי", לא "כמה חשוב". רווח סמך עונה על שתיהן. בהחלטות קליניות משתמשים בסיכון מוחלט, NNT ו-NNH, ובודקים אם ההבדל עובר את סף המשמעות הקלינית.',
+homework:'במאמר הבא, חשב בעצמך NNT מהטבלה של התוצאה הראשית.'},
+
+/* ---------- LEVEL 5 ---------- */
+{n:5,name:'סקירות ו-GRADE',sub:'מטא-אנליזות, הטיית פרסום, דירוג ודאות',
+steps:[
+ {t:'card',title:'סקירה שיטתית מול סקירה רגילה',term:'Systematic vs narrative review',
+  body:'<p>בסקירה רגילה מומחה בוחר את המחקרים שנראים לו חשובים. קל מאוד לבחור את מה שמתאים לדעה מוקדמת.</p><p>בסקירה שיטתית יש פרוטוקול שנרשם מראש (לרוב ב-PROSPERO), חיפוש מלא בכמה מאגרים, שני סוקרים שעובדים בנפרד, והערכה של סיכון ההטיה בכל מחקר.</p>',
+  visual:'',
+  take:'הכותרת "review" לבד לא אומרת כלום. חפש את המילה systematic ואת תרשים PRISMA.'},
+ {t:'card',title:'תרשים PRISMA',term:'PRISMA flow diagram',
+  body:'<p>תרשים שמראה איך מאלפי תוצאות חיפוש הגיעו לכמה מחקרים בודדים, ולמה כל השאר נפסלו.</p>',
+  visual:'<div class="flow"><div class="box">Records identified: 2,345</div><div class="arrow">↓</div><div class="box">Screened after duplicates removed: 1,610</div><div class="arrow">↓</div><div class="box">Full-text assessed: 120</div><div class="arrow">↓</div><div class="box">Included: 18 RCTs</div></div><p class="note">דוגמה מומצאת.</p>',
+  take:'אם אין תרשים כזה, קשה לדעת אם הסקירה באמת שיטתית.'},
+ {t:'card',title:'איך קוראים forest plot',term:'Forest plot',
+  body:'<p>כל שורה היא מחקר. הריבוע הוא התוצאה שלו, והקו הוא רווח הסמך. ריבוע גדול יותר = מחקר שמשקלו גדול יותר. היהלום בתחתית הוא התוצאה המאוחדת.</p>',
+  visual:SVG_FOREST,
+  take:'הקו האנכי הוא "אין השפעה". אם היהלום לא נוגע בו, התוצאה המאוחדת מובהקת.'},
+ {t:'q',q:'בתרשים שלמעלה, מחקרים 3 ו-5 חוצים את קו האפס, אבל היהלום לא. מה המסקנה?',
+  opts:['הסקירה לא מובהקת, כי יש מחקרים שחוצים','כשמאחדים את כל המחקרים, יש השפעה מובהקת לטובת התרופה','מחקר 5 מוכיח שהתרופה מזיקה','צריך להוציא את מחקרים 3 ו-5'],a:1,
+  ex:'זה בדיוק הכוח של מטא-אנליזה: מחקרים קטנים לא חד-משמעיים, שיחד נותנים תוצאה ברורה.'},
+ {t:'card',title:'האם המחקרים מסכימים?',term:'Heterogeneity · I²',
+  body:'<p>I² מודד כמה מההבדלים בין המחקרים הם אמיתיים ולא מקריים. בערך: 25% נמוך, 50% בינוני, 75% גבוה.</p>',
+  visual:'',
+  take:'I² גבוה אומר: לשאול למה. אולי אוכלוסיות שונות, מינונים שונים או מדדים שונים. ממוצע של תפוחים ותפוזים.'},
+ {t:'card',title:'הטיית פרסום',term:'Publication bias · Funnel plot',
+  body:'<p>מחקרים חיוביים מתפרסמים יותר ומהר יותר. מחקרים שליליים נשארים במגירה.</p>',
+  visual:'<div class="example"><span class="tag">דוגמה אמיתית</span>Turner ושותפיו, NEJM 2008: לפי נתוני ה-FDA רק כ-51% מניסויי נוגדי הדיכאון היו חיוביים. אבל בספרות שפורסמה, כ-94% נראו חיוביים. גודל האפקט בספרות נופח בממוצע בכ-32%. התרופות עדיין עדיפות על פלצבו, אבל פחות ממה שנראה.</div>'+SVG_FUNNEL,
+  take:'בתרשים משפך, כל נקודה היא מחקר. מחקרים גדולים למעלה, קטנים למטה. משפך לא סימטרי רומז שמחקרים קטנים ושליליים "נעלמו".'},
+ {t:'q',q:'מה מצא Turner ב-2008?',
+  opts:['שנוגדי דיכאון לא עובדים בכלל','שהספרות שפורסמה הציגה את נוגדי הדיכאון כיעילים יותר ממה שהראו כל הניסויים יחד','שה-FDA הסתיר נתונים','שכל הניסויים פורסמו'],a:1,
+  ex:'ההשוואה לנתוני ה-FDA חשפה שניסויים שליליים לא פורסמו, או פורסמו כאילו היו חיוביים. זו הסיבה שרישום מראש חשוב כל כך.'},
+ {t:'card',title:'GRADE: ארבע רמות ודאות',term:'GRADE',
+  body:'<p>GRADE לא מדרג מאמר בודד, אלא את כלל הראיות לשאלה אחת ולתוצאה אחת. השאלה: כמה אנחנו בטוחים שההשפעה האמיתית קרובה למה שמצאו?</p>',
+  visual:'<ul class="grade"><li><span class="dots">⊕⊕⊕⊕</span><b>גבוהה</b>מחקר נוסף כנראה לא ישנה את המסקנה</li><li><span class="dots">⊕⊕⊕◯</span><b>בינונית</b>מחקר נוסף עשוי לשנות</li><li><span class="dots">⊕⊕◯◯</span><b>נמוכה</b>מחקר נוסף כנראה ישנה</li><li><span class="dots">⊕◯◯◯</span><b>נמוכה מאוד</b>כל הערכה מאוד לא ודאית</li></ul>',
+  take:'נקודת ההתחלה: RCTs מתחילים בגבוהה, מחקרי תצפית בנמוכה. משם מורידים או מעלים.'},
+ {t:'card',title:'חמש סיבות להוריד, שלוש להעלות',term:'Downgrade · Upgrade',
+  body:'<p><b>מורידים רמה בגלל:</b></p>',
+  visual:'<ul class="checklist"><li><b>Risk of bias</b> · פגמים במחקרים עצמם</li><li><b>Inconsistency</b> · תוצאות שונות מאוד בין מחקרים</li><li><b>Indirectness</b> · אוכלוסייה או השוואה שונה מהשאלה שלך</li><li><b>Imprecision</b> · רווח סמך רחב, מעט אירועים</li><li><b>Publication bias</b> · סימנים למחקרים חסרים</li></ul><p><b>מעלים רמה</b> (בעיקר במחקרי תצפית): השפעה גדולה מאוד, יחסי מינון-תגובה, וערפלנים שהיו אמורים להקטין את ההשפעה.</p>',
+  take:'זו רשימת הבדיקה של המומחים. היא מסכמת את כל מה שלמדת ברמות 2 עד 4.'},
+ {t:'q',q:'יש הרבה RCTs, אבל רובם בלי סמיות, והתוצאות שלהם שונות מאוד זו מזו. מה רמת הוודאות?',
+  opts:['גבוהה, כי אלה RCTs','בינונית','נמוכה: יורדים רמה על סיכון הטיה ועוד רמה על חוסר עקביות','אי אפשר לדרג'],a:2,
+  ex:'מתחילים בגבוהה. מורידים אחת על risk of bias ואחת על inconsistency, ומגיעים לנמוכה.'},
+ {t:'card',title:'איפה מוצאים את זה מוכן',term:'Summary of findings',
+  body:'<p>סקירות Cochrane, והנחיות קליניות כמו NICE, מציגות טבלת <span class="en">Summary of findings</span>: לכל תוצאה, ההשפעה במספרים מוחלטים ורמת הוודאות לפי GRADE.</p>',
+  visual:'',
+  take:'כשיש טבלה כזו, תתחיל ממנה. היא חוסכת שעות.'}
+],
+game:{title:'שופט GRADE',prompt:'מה רמת הוודאות בראיות?',opts:CERTAINTY,items:[
+ {s:'10 RCTs גדולים וכפולי סמיות, תוצאות עקביות, רווח סמך צר, ואין סימנים להטיית פרסום.',a:0,ex:'אין סיבה להוריד. נשארים בגבוהה.'},
+ {s:'3 מחקרי עוקבה, בלי השפעה גדולה ובלי יחסי מינון-תגובה.',a:2,ex:'מחקרי תצפית מתחילים בנמוכה, ואין סיבה להעלות.'},
+ {s:'RCTs טובים, אבל כולם נעשו במבוגרים צעירים, והשאלה שלך היא על מטופלים מעל גיל 75.',a:1,ex:'הורדה אחת על indirectness.'},
+ {s:'2 RCTs קטנים בלי סמיות, תוצאות סותרות, ורווח סמך שכולל גם תועלת גדולה וגם נזק.',a:3,ex:'סיכון הטיה, חוסר עקביות וחוסר דיוק. יורדים עד הסוף.'},
+ {s:'מחקרי עוקבה עם השפעה גדולה מאוד, פי 10 בסיכון, ויחסי מינון-תגובה ברורים.',a:1,ex:'מתחילים בנמוכה ומעלים בזכות השפעה גדולה ומינון-תגובה.'},
+ {s:'RCTs טובים, אבל ה-funnel plot אסימטרי מאוד, וידוע על ניסויים ממומנים שלא פורסמו.',a:1,ex:'הורדה אחת על publication bias.'},
+ {s:'סדרת מקרים ודעות מומחים בלבד.',a:3,ex:'אין השוואה מבוקרת. ודאות נמוכה מאוד.'},
+ {s:'8 RCTs כפולי סמיות, אבל I² של 85%, וחלק מהמחקרים מראים נזק.',a:1,ex:'הורדה אחת על inconsistency. אפשר גם לטעון להורדה נוספת אם הפערים לא מוסברים.'}
+]},
+summary:'סקירה שיטתית טובה מבוססת על פרוטוקול, חיפוש מלא והערכת הטיות. forest plot מראה את כל המחקרים יחד. GRADE מסכם הכל לרמת ודאות אחת לכל תוצאה.',
+homework:'פתח סקירת Cochrane בנושא שמעניין אותך ומצא את טבלת Summary of findings.'},
+
+/* ---------- LEVEL 6 ---------- */
+{n:6,name:'זירת הדירוג',sub:'מדרגים מאמרים אמיתיים: לסמוך או לא?',
+steps:[
+ {t:'card',title:'כרטיס הדירוג שלך',term:'Your appraisal scorecard',
+  body:'<p>מעכשיו אתה מדרג מאמרים אמיתיים. לכל מאמר עבור על חמש השאלות, ובסוף תן רמת ודאות אחת.</p>',
+  visual:'<ol class="five"><li><span><b>PICO ברור?</b> ומתאים לשאלה הקלינית שלך</span></li><li><span><b>סוג המחקר</b> מתאים לטענה?</span></li><li><span><b>הטיות:</b> הגרלה, סמיות, נשירה, דיווח סלקטיבי</span></li><li><span><b>גודל:</b> הפרש מוחלט, CI, NNT, מול משמעות קלינית</span></li><li><span><b>הקשר:</b> שחזור, מימון, רישום, ראיות אחרות</span></li></ol>',
+  take:'הדירוג הוא על הטענה של המאמר, לא על כתב העת ולא על שמות החוקרים.'},
+ {t:'card',title:'דגלים אדומים מהירים',term:'Red flags',
+  body:'<p>כל אחד מאלה הוא סיבה לעצור ולבדוק:</p>',
+  visual:'<ul class="checklist red"><li>מדגם קטן מאוד, או בלי קבוצת ביקורת</li><li>המדד הראשי הוחלף, או שהמסקנות מבוססות על מדד משני</li><li>הבדל קטן מסף המשמעות הקלינית</li><li>נשירה גבוהה או לא שווה בין הקבוצות</li><li>בלי רישום מראש</li><li>תוצאה "פורצת דרך" שלא שוחזרה</li><li>כותרות בתקשורת שחזקות יותר מהמאמר עצמו</li></ul>',
+  take:'דגל אחד לא פוסל מאמר. כמה דגלים יחד, כן.'},
+ {t:'card',title:'דגלים ירוקים',term:'Green flags',
+  body:'<p>סימנים למחקר שאפשר לסמוך עליו יותר:</p>',
+  visual:'<ul class="checklist green"><li>רישום מראש, והמדד הראשי זהה לרישום</li><li>ניתוח ITT</li><li>בדיקה ודיווח של איכות הסמיות</li><li>רווחי סמך ומספרים מוחלטים</li><li>מימון עצמאי, או שיתוף נתונים מלא</li><li>שחזור במחקרים אחרים</li></ul>',
+  take:'במשחק הבא, כל מאמר אמיתי. התיאורים מקוצרים, והסיפור המלא מופיע אחרי שתענה.'},
+ {t:'q',q:'מאמר בכתב עת יוקרתי מאוד, עם חוקרים ידועים, על 12 מטופלים בלי קבוצת ביקורת. מה קובע את הדירוג?',
+  opts:['היוקרה של כתב העת','שמות החוקרים','השיטה: 12 מטופלים בלי ביקורת זו ודאות נמוכה מאוד, בכל כתב עת','כמות הציטוטים'],a:2,
+  ex:'בדיוק כך פורסם מאמר Wakefield ב-Lancet. תכף תפגוש אותו במשחק.'}
+],
+game:{title:'זירת הדירוג',prompt:'כמה אפשר לסמוך על הטענה?',opts:CERTAINTY,items:[
+ {s:'<div class="paperc"><span class="tag">Lancet, 1998</span><b>חיסון MMR, דלקת מעי ואוטיזם</b>סדרת מקרים של 12 ילדים. החוקרים העלו קשר בין החיסון לבין מחלת מעי ואוטיזם.<span class="claim">הטענה: ייתכן שהחיסון קשור להתפתחות אוטיזם.</span></div>',a:3,
+  ex:'מאמר Wakefield. 12 ילדים, בלי קבוצת ביקורת, וילדים שנבחרו באופן מוטה. מאוחר יותר התברר שהנתונים זויפו והיו ניגודי עניינים. המאמר נשלף ב-2010. מחקרי עוקבה של מיליוני ילדים לא מצאו קשר.'},
+ {s:'<div class="paperc"><span class="tag">Lancet, 2018</span><b>21 נוגדי דיכאון: מטא-אנליזת רשת</b>522 ניסויים כפולי סמיות, 116,477 מבוגרים עם דיכאון מז\'ורי, טיפול חריף של כ-8 שבועות.<span class="claim">הטענה: כל 21 התרופות יעילות יותר מפלצבו בטווח הקצר.</span></div>',a:1,
+  ex:'Cipriani ושותפיו. ראיות חזקות לטענה המצומצמת: עדיפות על פלצבו בטווח הקצר. הסייגים: האפקטים צנועים, רוב הניסויים ממומנים בידי התעשייה, ואין כמעט מידע על הטווח הארוך. התשובה "גבוהה" גם סבירה לטענה המצומצמת.'},
+ {s:'<div class="paperc"><span class="tag">JAACAP, 2001</span><b>Study 329: פרוקסטין במתבגרים</b>RCT של כ-275 מתבגרים עם דיכאון, מול אימיפרמין ופלצבו. ממומן בידי היצרן.<span class="claim">הטענה במאמר: פרוקסטין נסבל היטב ויעיל לדיכאון במתבגרים.</span></div>',a:3,
+  ex:'המדדים הראשיים שהוגדרו מראש לא הראו הבדל, והמאמר הבליט מדדים משניים. ניתוח מחדש ב-BMJ ב-2015 מצא שהתרופה לא יעילה וגורמת ליותר נזקים, כולל אירועים אובדניים. מקרה קלאסי של דיווח סלקטיבי.'},
+ {s:'<div class="paperc"><span class="tag">Am J Psychiatry, 2006</span><b>STAR*D</b>מחקר ענק בקהילה, כ-4,000 מטופלים, עד ארבעה שלבי טיפול רצופים, בלי קבוצת פלצבו.<span class="claim">הטענה שצוטטה שנים: 67% מגיעים לרמיסיה אחרי עד ארבעה שלבים.</span></div>',a:2,
+  ex:'המחקר חשוב, אבל המספר 67% שנוי במחלוקת. ניתוח מחדש שפורסם ב-BMJ Open ב-2023, לפי המדד שהוגדר בפרוטוקול ובלי משתתפים שלא עמדו בתנאי הכניסה, מצא כ-35%. בנוסף, בלי פלצבו אי אפשר להפריד את השפעת הטיפול מהמהלך הטבעי.'},
+ {s:'<div class="paperc"><span class="tag">NEJM, 2021</span><b>פסילוסיבין מול אסציטלופרם</b>RCT של 59 מטופלים עם דיכאון, 6 שבועות. המדד הראשי (QIDS-SR-16) לא הראה הבדל מובהק. רוב המדדים המשניים נטו לטובת פסילוסיבין.<span class="claim">הטענה בתקשורת: פסילוסיבין עובד טוב יותר מנוגדי דיכאון.</span></div>',a:2,
+  ex:'המדד הראשי לא הראה הבדל. המדדים המשניים לא תוקנו להשוואות מרובות. המדגם קטן, והסמיות כמעט בלתי אפשרית. מחקר מעניין שמצדיק ניסויים גדולים, לא כותרות.'},
+ {s:'<div class="paperc"><span class="tag">Lancet, 1987</span><b>קנאביס וסכיזופרניה: מתגייסים שוודים</b>מחקר עוקבה של כ-45,000 מתגייסים, מעקב 15 שנה. יחסי מינון-תגובה בין שימוש בקנאביס לסכיזופרניה.<span class="claim">הטענה: שימוש בקנאביס קשור לסיכון מוגבר לסכיזופרניה.</span></div>',a:1,
+  ex:'לטענה על קשר, הוודאות סבירה: מחקר גדול, מינון-תגובה, ושחזור במחקרים רבים אחר כך. לטענה סיבתית הוודאות נמוכה יותר: ייתכנו ערפלנים, ותסמינים מוקדמים עשויים להוביל לשימוש (reverse causation).'},
+ {s:'<div class="paperc"><span class="tag">Am J Psychiatry, 2019</span><b>Esketamine בתרסיס, TRANSFORM-2</b>RCT בדיכאון עמיד, כולם התחילו נוגד דיכאון חדש. הבדל של כ-4 נקודות ב-MADRS אחרי 4 שבועות לטובת התרופה.<span class="claim">הטענה: esketamine יעיל לדיכאון עמיד.</span></div>',a:1,
+  ex:'ניסוי טוב, אבל: לתרופה תחושות דיסוציאטיביות שמקשות על הסמיות, ההבדל צנוע, ושני ניסויים מקבילים בתוכנית (TRANSFORM-1 ו-3) לא הגיעו למובהקות במדד הראשי. בינונית, ויש שיגידו נמוכה.'},
+ {s:'<div class="paperc"><span class="tag">NEJM, 2008</span><b>פרסום סלקטיבי של ניסויי נוגדי דיכאון</b>השוואה של 74 ניסויים שהוגשו ל-FDA מול מה שפורסם בספרות.<span class="claim">הטענה: הספרות שפורסמה מציגה את נוגדי הדיכאון כיעילים יותר ממה שהם.</span></div>',a:0,
+  ex:'Turner ושותפיו. מקור הנתונים אובייקטיבי ומלא (ה-FDA), ההשוואה פשוטה וישירה, והממצא שוחזר בתחומים אחרים. ודאות גבוהה לטענה הזו.'},
+ {s:'<div class="paperc"><span class="tag">Depression and Anxiety, 2019</span><b>שוקולד מריר ודיכאון</b>סקר חתך של כ-13,000 מבוגרים בארה"ב. מי שדיווחו על אכילת שוקולד מריר דיווחו על פחות תסמיני דיכאון.<span class="claim">הכותרות: שוקולד מריר מפחית דיכאון ב-70%.</span></div>',a:3,
+  ex:'מחקר חתך לא יכול לקבוע מה קדם למה, וערפלנים רבים אפשריים. ה-70% הוא הפחתה יחסית ב-odds, על מעט מאוד אנשים שאכלו שוקולד מריר. לטענה הסיבתית, ודאות נמוכה מאוד.'},
+ {s:'<div class="paperc"><span class="tag">BMJ, 2013</span><b>ליתיום ומניעת אובדנות</b>סקירה שיטתית ומטא-אנליזה של RCTs בהפרעות מצב רוח, ליתיום מול פלצבו וטיפולים אחרים.<span class="claim">הטענה: ליתיום מפחית התאבדויות.</span></div>',a:1,
+  ex:'RCTs, תוצאה עקבית ועקביות עם מחקרי תצפית. אבל מספר האירועים קטן מאוד, ולכן רווחי הסמך רחבים (imprecision). בינונית היא הערכה סבירה.'}
+]},
+summary:'הדירוג תמיד על טענה מסוימת. אותו מאמר יכול לתת ודאות גבוהה לטענה מצומצמת ונמוכה לטענה רחבה. כתב עת יוקרתי לא מחליף בדיקה.',
+homework:'קח כותרת על מחקר פסיכיאטרי מהעיתון השבוע, מצא את המאמר המקורי, ודרג אותו.'},
+
+/* ---------- LEVEL 7 ---------- */
+{n:7,name:'לחפש ולבקש',sub:'איך מוצאים מאמרים טובים ומה לבקש ממני',
+steps:[
+ {t:'card',title:'מאיפה מתחילים',term:'The evidence pyramid for busy clinicians',
+  body:'<p>קלינאי עסוק לא מתחיל ממאמרים בודדים. מתחילים מלמעלה, ויורדים רק כשאין תשובה או כשהשאלה חדשה.</p>',
+  visual:'<div class="pyramid"><div style="width:46%"><b>Guidelines</b>הנחיות: NICE, APA, CANMAT</div><div style="width:64%"><b>Point-of-care</b>UpToDate, DynaMed</div><div style="width:82%"><b>Systematic reviews</b>Cochrane, Epistemonikos</div><div style="width:100%"><b>Single studies</b>PubMed</div></div>',
+  take:'הנחיה טובה כבר עשתה בשבילך את העבודה של רמות 2 עד 6.'},
+ {t:'card',title:'PubMed בחוכמה',term:'PubMed',
+  body:'<p>כמה טריקים שחוסכים הרבה זמן:</p>',
+  visual:'<ul class="checklist"><li><b>סינון לפי סוג מאמר:</b> בצד המסך, Article type, לבחור Randomized Controlled Trial או Systematic Review.</li><li><b>מונחי MeSH:</b> מילות מפתח קבועות שתופסות גם מאמרים עם ניסוח שונה.</li><li><b>Similar articles:</b> מצאת מאמר טוב? הקישור הזה מוצא את קרוביו.</li><li><b>מיון לפי תאריך:</b> כדי לראות קודם את החדשים.</li></ul><div class="paper">depression[mh] AND ketamine AND randomized controlled trial[pt]</div>',
+  take:'שלושה רכיבים: מה הבעיה, מה הטיפול, ואיזה סוג מחקר.'},
+ {t:'card',title:'מקורות נוספים שכדאי להכיר',term:'Beyond PubMed',
+  body:'',
+  visual:'<ul class="checklist"><li><b>Cochrane Library</b> · סקירות שיטתיות עם טבלאות GRADE.</li><li><b>Epistemonikos</b> · מאגר ענק של סקירות שיטתיות.</li><li><b>ClinicalTrials.gov</b> · לבדוק רישום מראש ומדד ראשי מקורי.</li><li><b>Retraction Watch</b> · לבדוק אם מאמר נשלף.</li><li><b>medRxiv</b> · מאמרים לפני ביקורת עמיתים (preprints). מעניין, אבל עוד לא נבדק.</li></ul>',
+  take:'preprint הוא טיוטה. הוא יכול להשתנות לגמרי, או לא להתפרסם לעולם.'},
+ {t:'q',q:'קראת כותרת "תרופה חדשה מרפאת דיכאון תוך יום". המקור הוא medRxiv. מה המשמעות?',
+  opts:['המאמר עבר ביקורת עמיתים','זה preprint שעוד לא עבר ביקורת עמיתים. מתייחסים אליו כהשערה','זה מאמר שנשלף','זו הנחיה קלינית'],a:1,
+  ex:'medRxiv הוא שרת preprints. הממצא יכול להיות נכון, אבל עוד לא נבדק.'},
+ {t:'card',title:'כתבי עת טורפניים',term:'Predatory journals',
+  body:'<p>כתבי עת שמפרסמים כמעט כל דבר תמורת תשלום, בלי ביקורת עמיתים אמיתית.</p>',
+  visual:'<ul class="checklist red"><li>הזמנה במייל לפרסם "תוך 7 ימים"</li><li>דמי פרסום גבוהים, בלי ביקורת אמיתית</li><li>לא מופיע ב-MEDLINE</li><li>שם שדומה מאוד לכתב עת מוכר</li></ul>',
+  take:'וגם ההפך: impact factor גבוה לא מבטיח שמאמר מסוים אמין. Wakefield פורסם ב-Lancet.'},
+ {t:'card',title:'מה לבקש ממני כשאתה מחפש מאמרים',term:'Prompt: find evidence',
+  body:'<p>העתק, מלא את הסוגריים ושלח לי. בפרויקט הזה יש לי חיבור ל-PubMed, אז אני יכול לחפש ישירות.</p>',
+  visual:'<div class="prompt"><pre>'+PROMPT_SEARCH+'</pre><button class="btn copy">העתק</button></div>',
+  take:'בדוק תמיד שהמאמרים שאני נותן קיימים. מודלי שפה עלולים להמציא ציטוטים, וה-PMID מאפשר לבדוק בשנייה.'},
+ {t:'card',title:'מה לבקש ממני כשאתה רוצה ניתוח',term:'Prompt: appraise a paper',
+  body:'<p>צרף את המאמר, קובץ PDF או קישור, והוסף את הבקשה הזו:</p>',
+  visual:'<div class="prompt"><pre>'+PROMPT_APPRAISE+'</pre><button class="btn copy">העתק</button></div>',
+  take:'הכי מלמד: נסה לנתח קודם לבד, ורק אז בקש ממני ניתוח והשווה.'},
+ {t:'card',title:'הכנה ל-journal club',term:'Prompt: journal club',
+  body:'<p>מבנה של 7 שקפים שעובד כמעט תמיד, ובקשה מוכנה:</p>',
+  visual:'<div class="prompt"><pre>'+PROMPT_JC+'</pre><button class="btn copy">העתק</button></div>',
+  take:'השקף האחרון הוא החשוב ביותר. בשבילו מגיעים.'},
+ {t:'q',q:'נתתי לך ציטוט למאמר, ואתה לא מוצא אותו ב-PubMed. מה עושים?',
+  opts:['משתמשים בו, הוא בטח קיים','לא משתמשים בו עד שמאמתים. ייתכן שהציטוט שגוי או מומצא','מחפשים בגוגל תמונות','מצטטים בכל זאת עם הערה'],a:1,
+  ex:'מודלי שפה עלולים לייצר ציטוטים שנשמעים אמיתיים. PMID או DOI מאפשרים בדיקה מהירה. אם אין, שאל אותי שוב ובקש מקור שאפשר לאמת.'}
+],
+game:{title:'חוקר המקורות',prompt:'מה הצעד הנכון?',items:[
+ {s:'מטופל שואל על ליתיום ותפקוד כלייתי, ויש לך 5 דקות.',opts:['חיפוש RCTs ב-PubMed','הנחיה קלינית או UpToDate','medRxiv','Retraction Watch'],a:1,ex:'לשאלה קלינית מהירה מתחילים מראש הפירמידה של המקורות.'},
+ {s:'רוצה לבדוק אם המדד הראשי של ניסוי השתנה מאז שתוכנן.',opts:['ClinicalTrials.gov','Google Scholar','ויקיפדיה','הודעה לעיתונות'],a:0,ex:'ברישום רואים את המדד הראשי המקורי ואת היסטוריית השינויים.'},
+ {s:'מייל מכתב עת: "נשמח לפרסם את המאמר שלך תוך 7 ימים, תמורת 1,500 דולר".',opts:['הזדמנות מצוינת','סימן אופייני לכתב עת טורפני','כתב עת של Cochrane','preprint'],a:1,ex:'פרסום מהיר תמורת תשלום, בלי ביקורת אמיתית.'},
+ {s:'רוצה את כל ה-RCTs על esketamine בדיכאון.',opts:['PubMed עם סינון Randomized Controlled Trial','חיפוש חופשי בגוגל','רק מאמרי מערכת','UpToDate'],a:0,ex:'סינון לפי סוג מאמר הוא הדרך המהירה למצוא ניסויים.'},
+ {s:'שמעת שמאמר מפורסם נשלף. איך בודקים?',opts:['Retraction Watch, או הודעה בדף המאמר ב-PubMed','מספר הציטוטים','impact factor','שואלים עמית'],a:0,ex:'PubMed מסמן מאמרים שנשלפו, ו-Retraction Watch מרכז את המידע.'},
+ {s:'האם יש סקירה שיטתית עדכנית על CBT לנדודי שינה?',opts:['Cochrane או Epistemonikos','medRxiv','ClinicalTrials.gov','אתר של חברת תרופות'],a:0,ex:'שני המאגרים האלה מתמחים בסקירות שיטתיות.'},
+ {s:'איזו בקשה ממני תיתן את התוצאה הכי אמינה?',opts:['"תביא לי מאמרים על קטמין"','"מה דעתך על קטמין?"','"מצא RCTs וסקירות שיטתיות מ-5 השנים האחרונות על קטמין בדיכאון עמיד, עם PMID, גודל השפעה ומגבלה מרכזית לכל אחד. אל תמציא מקורות"','"תסכם לי את ויקיפדיה על קטמין"'],a:2,ex:'בקשה מדויקת: סוג מחקר, טווח זמן, אוכלוסייה, מה להחזיר, ודרך לאמת.'},
+ {s:'המאמר פורסם בכתב עת עם impact factor גבוה מאוד. האם הוא אמין?',opts:['כן, תמיד','לא בהכרח. בודקים את השיטה, לא את כתב העת','רק אם הוא חדש','רק אם הוא ארוך'],a:1,ex:'איכות כתב העת היא ממוצע. כל מאמר צריך בדיקה משלו.'},
+ {s:'מצאת הנחיה קלינית מ-2012 בנושא שהתפתח מאוד מאז.',opts:['משתמשים בה כמו שהיא','בודקים אם יש עדכון, ומחפשים סקירות חדשות יותר','זורקים את כל ההנחיות','מחפשים רק preprints'],a:1,ex:'הנחיות מתיישנות. בתחומים שזזים מהר, בודקים גם ראיות חדשות.'},
+ {s:'אתה רוצה ללמוד הכי הרבה מניתוח של מאמר בעזרתי. מה הכי טוב?',opts:['לבקש ממני סיכום בלבד','לנתח קודם לבד לפי 5 השאלות, ואז לבקש ניתוח ולהשוות','לקרוא רק את התקציר','לבקש ממני להחליט בשבילך'],a:1,ex:'השוואה בין הניתוח שלך לשלי היא משוב מיידי. זו הדרך המהירה ביותר להשתפר.'}
+]},
+summary:'מתחילים מהנחיות וסקירות, יורדים למאמרים בודדים כשצריך. בודקים רישום, שליפה ו-preprint. מבקשים ממני בקשות מדויקות, ומאמתים כל מקור.',
+homework:'בפעם הבאה שיש לך שאלה קלינית, השתמש בבקשת החיפוש מהרמה הזו ושלח לי.'}
 ];
 
 const KEY='paperlab.v1';
-let store={xp:0,best:0,l1done:false,voice:false,ans:{},pos:0};
-try{const s=localStorage.getItem(KEY);if(s)store=Object.assign(store,JSON.parse(s))}catch(e){}
+let store={xp:0,voice:false,all:false,lv:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');
+  if(s){store=Object.assign(store,s);
+    if(!s.lv&&(s.ans||s.l1done))store.lv={1:{ans:s.ans||{},pos:s.pos||0,done:!!s.l1done,best:s.best||0}};
+    store.lv=store.lv||{}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+function LV(n){return store.lv[n]||(store.lv[n]={ans:{},pos:0,done:false,best:0})}
+function isOpen(n){return n===1||store.all||LV(n-1).done}
 
-let view='home',i=0,answered=null,g={i:0,score:0,streak:0,ans:null,showHe:false,order:[]};
+let view='home',L=LEVELS[0],i=0,answered=null,g=null;
 const app=document.getElementById('app');
 
-function strip(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim()}
+function strip(h){const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('svg').forEach(s=>s.remove());return d.textContent.replace(/\s+/g,' ').trim()}
 let heVoice=null;
 function pickVoice(){if(!('speechSynthesis' in window))return;heVoice=speechSynthesis.getVoices().find(v=>/^he|^iw/i.test(v.lang))||null}
 if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
@@ -262,34 +712,48 @@ function wireTop(){
   document.getElementById('voiceT').onclick=()=>{store.voice=!store.voice;save();if(!store.voice)stopSpeak();render()};
   const h=document.getElementById('homeB');if(h)h.onclick=()=>{stopSpeak();view='home';render()};
 }
+app.addEventListener('click',e=>{
+  const b=e.target.closest('.copy');if(!b)return;
+  const pre=b.parentElement.querySelector('pre');const txt=pre?pre.textContent:'';
+  const done=()=>{b.textContent='הועתק ✓';setTimeout(()=>{b.textContent='העתק'},1800)};
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(pre);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent='סמן והעתק'};
+  try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(err){fallback()}
+});
+
+function openLevel(n){
+  stopSpeak();L=LEVELS[n-1];const st=LV(n);
+  if(st.done){view='done';g=null}else{view='lesson';i=Math.min(st.pos||0,L.steps.length-1)}
+  render();
+}
 
 function renderHome(){
+  const doneCount=LEVELS.filter(l=>LV(l.n).done).length;
   app.innerHTML=topBar()+`
   <section class="sheet">
-    <div class="eyebrow"><span>הקורס שלך</span><span>יחידות של 10 דקות</span></div>
+    <div class="eyebrow"><span>הקורס שלך</span><span>${doneCount}/${LEVELS.length} רמות הושלמו</span></div>
     <h1>לקרוא מאמר כמו מומחה</h1>
-    <p>שבע רמות, מהקל לקשה. כל רמה: כרטיסים קצרים עם הקראה קולית, שאלה אחרי כל רעיון, ומשחק בסוף. המונחים באנגלית, ההסברים בעברית.</p>
+    <p>שבע רמות, מהקל לקשה. כל רמה: כרטיסים קצרים עם הקראה קולית, שאלה אחרי כל רעיון, ומשחק בסוף. כל רמה נפתחת אחרי שמסיימים את המשחק של הרמה הקודמת.</p>
   </section>
-  <div class="levels">${LEVELS.map(l=>`<button class="lvl ${l.open?'':'locked'}" ${l.open?'data-open="1"':'disabled'}>
+  <div class="levels">${LEVELS.map(l=>{const st=LV(l.n),open=isOpen(l.n);
+    const state=!open?'🔒 נעול':st.done?'✓ הושלם':st.pos>0?'▶ המשך':'▶ התחל';
+    return `<button class="lvl ${open?'':'locked'}" data-n="${l.n}" ${open?'':'disabled'}>
     <span class="n">${l.n}</span><span><b>${l.name}</b><small>${l.sub}</small></span>
-    <span class="state">${l.open?(store.l1done?'✓ הושלם':(store.pos>0?'▶ המשך':'▶ התחל')):'בבנייה'}</span></button>`).join('')}</div>
-  ${(store.pos>0||store.l1done)?'<div class="row"><button class="btn" id="resetB">התחל את רמה 1 מחדש</button></div>':''}
-  ${store.l1done?`<div class="row"><button class="btn primary" id="gameB">שחק שוב: "איפה זה כתוב?"</button><span class="note">שיא: ${store.best}/${GAME.length}</span></div>`:''}`;
+    <span class="state">${state}</span></button>`}).join('')}</div>
+  ${store.all?'':'<button class="linkbtn unlock" id="allB">לפתוח את כל הרמות בלי לחכות</button>'}`;
   wireTop();
-  app.querySelector('[data-open]').onclick=()=>{view='lesson';i=Math.min(store.pos||0,STEPS.length-1);render()};
-  const rb=document.getElementById('resetB');if(rb)rb.onclick=()=>{store.ans={};store.pos=0;save();view='lesson';i=0;render()};
-  const gb=document.getElementById('gameB');if(gb)gb.onclick=startGame;
+  app.querySelectorAll('.lvl[data-n]:not([disabled])').forEach(b=>b.onclick=()=>openLevel(+b.dataset.n));
+  const ab=document.getElementById('allB');if(ab)ab.onclick=()=>{store.all=true;save();render()};
 }
 
 function renderLesson(){
-  answered=store.ans[i]??null;store.pos=i;save();
-  const s=STEPS[i],pct=Math.round(i/STEPS.length*100);
+  const st=LV(L.n);answered=st.ans[i]??null;st.pos=i;save();
+  const s=L.steps[i],pct=Math.round(i/L.steps.length*100);
   let inner='';
   if(s.t==='card'){
-    inner=`<div class="eyebrow"><span>רמה 1 · אנטומיה של מאמר</span><span>${i+1}/${STEPS.length}</span></div>
-    <h2>${s.title}</h2><div class="term">${s.term}</div>${s.body}${s.visual}<p class="take">${s.take}</p>`;
+    inner=`<div class="eyebrow"><span>רמה ${L.n} · ${L.name}</span><span>${i+1}/${L.steps.length}</span></div>
+    <h2>${s.title}</h2><div class="term">${s.term}</div>${s.body}${s.visual||''}<p class="take">${s.take}</p>`;
   }else{
-    inner=`<div class="eyebrow"><span>בדוק את עצמך</span><span>${i+1}/${STEPS.length}</span></div>
+    inner=`<div class="eyebrow"><span>בדוק את עצמך</span><span>${i+1}/${L.steps.length}</span></div>
     <h3>${s.q}</h3><div class="opts">${s.opts.map((o,k)=>{
       let c='';if(answered!==null){if(k===s.a)c='right';else if(k===answered)c='wrong'}
       return `<button class="opt ${c}" data-k="${k}" ${answered!==null?'disabled':''}>${o}</button>`}).join('')}</div>
@@ -300,61 +764,68 @@ function renderLesson(){
   <section class="sheet">${inner}</section>
   <div class="row actions"><button class="btn" id="readB">🔊 הקרא</button><span class="spacer"></span>
   ${i>0?'<button class="btn" id="prevB">הקודם</button>':''}
-  <button class="btn primary" id="nextB" ${canNext?'':'disabled'}>${i===STEPS.length-1?'למשחק ←':'הבא ←'}</button></div>
+  <button class="btn primary" id="nextB" ${canNext?'':'disabled'}>${i===L.steps.length-1?'למשחק ←':'הבא ←'}</button></div>
   <p class="note" id="voiceNote" hidden>לא נמצא במכשיר קול בעברית. אפשר להוסיף קול עברי בהגדרות ההקראה של המכשיר.</p>`;
   wireTop();
   document.getElementById('readB').onclick=()=>{const ok=speak(stepText(s));if(!ok||!heVoice)document.getElementById('voiceNote').hidden=false};
-  const p=document.getElementById('prevB');if(p)p.onclick=()=>{stopSpeak();i--;answered=null;render()};
-  document.getElementById('nextB').onclick=()=>{stopSpeak();if(i===STEPS.length-1){startGame();return}i++;answered=null;render()};
-  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{answered=+b.dataset.k;store.ans[i]=answered;if(answered===s.a){store.xp+=10;save()}render();
+  const p=document.getElementById('prevB');if(p)p.onclick=()=>{stopSpeak();i--;render()};
+  document.getElementById('nextB').onclick=()=>{stopSpeak();if(i===L.steps.length-1){startGame();return}i++;render()};
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{answered=+b.dataset.k;st.ans[i]=answered;if(answered===s.a){store.xp+=10}save();render();
     if(store.voice)speak((answered===s.a?'נכון. ':'לא בדיוק. ')+s.ex)});
-  if(store.voice&&s.t==='card'&&answered===null)speak(stepText(s));
+  if(store.voice&&s.t==='card')speak(stepText(s));
 }
 
 function startGame(){
   stopSpeak();view='game';
-  g={i:0,score:0,streak:0,ans:null,answers:[],showHe:false,order:GAME.map((_,k)=>k).sort(()=>Math.random()-.5)};render();
+  g={i:0,score:0,streak:0,ans:null,answers:[],showHe:false,order:L.game.items.map((_,k)=>k).sort(()=>Math.random()-.5)};render();
 }
 function renderGame(){
-  const it=GAME[g.order[g.i]];g.ans=g.answers[g.i]??null;
-  app.innerHTML=topBar()+`<div class="progress" aria-hidden="true"><i style="width:${Math.round(g.i/GAME.length*100)}%"></i></div>
+  const G=L.game,it=G.items[g.order[g.i]];g.ans=g.answers[g.i]??null;
+  const opts=it.opts||G.opts,shared=!it.opts;
+  const q=G.ltr?`<div class="snippet">${it.s}</div>${g.showHe?`<p class="trans">${it.he}</p>`:'<button class="linkbtn" id="heB">הצג תרגום</button>'}`
+               :(it.s.startsWith('<')?it.s:`<p class="qcard">${it.s}</p>`);
+  app.innerHTML=topBar()+`<div class="progress" aria-hidden="true"><i style="width:${Math.round(g.i/G.items.length*100)}%"></i></div>
   <section class="sheet">
-    <div class="eyebrow"><span>משחק · איפה זה כתוב?</span><span>${g.i+1}/${GAME.length}</span></div>
+    <div class="eyebrow"><span>משחק · ${G.title}</span><span>${g.i+1}/${G.items.length}</span></div>
     <div class="row"><span class="pill">ניקוד ${g.score}</span><span class="pill ${g.streak>1?'streak':''}">🔥 רצף ${g.streak}</span></div>
-    <h3>מאיזה חלק במאמר נלקח המשפט?</h3>
-    <div class="snippet">${it.s}</div>
-    ${g.showHe?`<p class="trans">${it.he}</p>`:'<button class="linkbtn" id="heB">הצג תרגום</button>'}
-    <div class="sections opts">${GAME_OPTS.map((o,k)=>{let c='';if(g.ans!==null){if(k===it.a)c='right';else if(k===g.ans)c='wrong'}
+    <h3>${G.prompt}</h3>${q}
+    <div class="${shared&&opts.length>4?'sections ':''}opts">${opts.map((o,k)=>{let c='';if(g.ans!==null){if(k===it.a)c='right';else if(k===g.ans)c='wrong'}
       return `<button class="opt ${c}" data-k="${k}" ${g.ans!==null?'disabled':''}>${o}</button>`}).join('')}</div>
-    ${g.ans!==null?`<div class="feedback ${g.ans===it.a?'ok':'no'}"><strong>${g.ans===it.a?'נכון!':'התשובה: '+GAME_OPTS[it.a]}</strong>${it.ex}</div>`:''}
+    ${g.ans!==null?`<div class="feedback ${g.ans===it.a?'ok':'no'}"><strong>${g.ans===it.a?'נכון!':'התשובה: '+opts[it.a]}</strong>${it.ex}</div>`:''}
   </section>
-  <div class="row actions">${g.i>0?'<button class="btn" id="prevG">הקודם</button>':''}<span class="spacer"></span><button class="btn primary" id="nextG" ${g.ans===null?'disabled':''}>${g.i===GAME.length-1?'לתוצאה ←':'הבא ←'}</button></div>`;
+  <div class="row actions">${g.i>0?'<button class="btn" id="prevG">הקודם</button>':''}<span class="spacer"></span><button class="btn primary" id="nextG" ${g.ans===null?'disabled':''}>${g.i===G.items.length-1?'לתוצאה ←':'הבא ←'}</button></div>`;
   wireTop();
   const hb=document.getElementById('heB');if(hb)hb.onclick=()=>{g.showHe=true;render()};
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{g.ans=+b.dataset.k;g.answers[g.i]=g.ans;
     if(g.ans===it.a){g.score++;g.streak++;store.xp+=5+Math.min(g.streak,5);save()}else g.streak=0;render();
-    if(store.voice)speak((g.ans===it.a?'נכון. ':'התשובה היא '+GAME_OPTS[it.a]+'. ')+it.ex)});
-  document.getElementById('nextG').onclick=()=>{stopSpeak();if(g.i===GAME.length-1){view='done';store.l1done=true;store.best=Math.max(store.best,g.score);save();render();return}g.i++;g.showHe=false;render()};
+    if(store.voice)speak((g.ans===it.a?'נכון. ':'התשובה היא '+opts[it.a]+'. ')+strip(it.ex))});
+  document.getElementById('nextG').onclick=()=>{stopSpeak();
+    if(g.i===G.items.length-1){const st=LV(L.n);st.done=true;st.best=Math.max(st.best||0,g.score);save();view='done';render();return}
+    g.i++;g.showHe=false;render()};
   const pg=document.getElementById('prevG');if(pg)pg.onclick=()=>{stopSpeak();g.i--;g.showHe=false;render()};
 }
 function renderDone(){
-  const msg=g.score>=10?'מצוין. אתה כבר מנווט במאמר כמו מומחה.':g.score>=7?'יפה מאוד. עוד סיבוב אחד והמפה תשב לך בראש.':'התחלה טובה. כדאי לשחק שוב מחר: חזרה מרווחת היא הדרך הכי טובה לזכור.';
+  const st=LV(L.n),N=L.game.items.length,next=LEVELS[L.n];
+  const head=g?`<div class="big">${g.score}/${N}</div><h2>${g.score>=N*.8?'מצוין. זה כבר יושב לך טוב.':g.score>=N*.6?'יפה מאוד. עוד סיבוב אחד וזה יתקבע.':'התחלה טובה. כדאי לשחק שוב מחר: חזרה מרווחת היא הדרך הכי טובה לזכור.'}</h2>`
+              :`<h2>רמה ${L.n}: ${L.name}</h2><p class="note">השיא שלך במשחק: ${st.best}/${N}</p>`;
   app.innerHTML=topBar()+`<section class="sheet">
-    <div class="eyebrow"><span>רמה 1 הושלמה</span><span>XP ${store.xp}</span></div>
-    <div class="big">${g.score}/${GAME.length}</div><h2>${msg}</h2>
-    <p><b>מה לקחת מהרמה הזו:</b> Methods קובע את האמינות. Abstract ו-Discussion הם הפרשנות של החוקרים. Figure 1, Limitations ו-Funding הם המקומות שבהם מסתתרים הדגלים האדומים.</p>
-    <p class="take">תרגיל לשבוע: בפעם הבאה שתפתח מאמר, נסה רק לנסח את ה-PICO שלו בשורה אחת.</p>
-    <p class="note">הרמה הבאה: פירמידת הראיות. איזה סוג מחקר זה, ולמה מחקר תצפיתי על אלפי מטופלים יכול להיות פחות אמין מניסוי קטן.</p>
+    <div class="eyebrow"><span>רמה ${L.n} הושלמה</span><span>XP ${store.xp}</span></div>
+    ${head}
+    <p><b>מה לקחת מהרמה הזו:</b> ${L.summary}</p>
+    <p class="take">תרגיל לשבוע: ${L.homework}</p>
+    ${next?`<p class="note">הרמה הבאה: ${next.name}. ${next.sub}.</p>`:'<p class="note">סיימת את כל הקורס. מכאן, כל מאמר שתקרא הוא תרגול.</p>'}
   </section>
-  <div class="row actions"><button class="btn" id="againB">שחק שוב</button><button class="btn primary" id="mapB">למפת הרמות</button></div>`;
+  <div class="row actions"><button class="btn" id="reviewB">לכרטיסים</button><button class="btn" id="againB">שחק שוב</button><span class="spacer"></span>
+  ${next?'<button class="btn primary" id="nextL">לרמה הבאה ←</button>':'<button class="btn primary" id="mapB">למפת הרמות</button>'}</div>`;
   wireTop();
+  document.getElementById('reviewB').onclick=()=>{view='lesson';i=0;render()};
   document.getElementById('againB').onclick=startGame;
-  document.getElementById('mapB').onclick=()=>{view='home';render()};
+  const nl=document.getElementById('nextL');if(nl)nl.onclick=()=>openLevel(next.n);
+  const mb=document.getElementById('mapB');if(mb)mb.onclick=()=>{view='home';render()};
 }
 function render(){({home:renderHome,lesson:renderLesson,game:renderGame,done:renderDone})[view]();window.scrollTo({top:0})}
 render();
 </script>
-
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 </body>
 </html>
