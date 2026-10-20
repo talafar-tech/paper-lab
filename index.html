@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2F55D4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="קריאת מאמרים">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>מעבדת קריאת מאמרים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single centered "reading desk" column; each step is one sheet of paper with highlighter marks. */
+:root{
+  --bg:#EEF2F6; --sheet:#FFFFFF; --ink:#16202E; --muted:#5A6678; --line:#D3DAE4;
+  --accent:#2F55D4; --accent-ink:#FFFFFF; --hl:#FFE45C; --hl-ink:#16202E;
+  --good:#1F8A5B; --good-bg:#E3F4EC; --bad:#C2413A; --bad-bg:#FBE7E5;
+  --f-display:"Frank Ruhl Libre","Times New Roman",serif;
+  --f-body:"IBM Plex Sans Hebrew",system-ui,"Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151E; --sheet:#18212D; --ink:#E7ECF3; --muted:#9AA6B8; --line:#2B3746;
+  --accent:#7D9BFF; --accent-ink:#0F151E; --hl:#E8C93A; --hl-ink:#14181F;
+  --good:#5DD39E; --good-bg:#16322A; --bad:#FF8A80; --bad-bg:#3A1E1E; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F151E; --sheet:#18212D; --ink:#E7ECF3; --muted:#9AA6B8; --line:#2B3746;
+  --accent:#7D9BFF; --accent-ink:#0F151E; --hl:#E8C93A; --hl-ink:#14181F;
+  --good:#5DD39E; --good-bg:#16322A; --bad:#FF8A80; --bad-bg:#3A1E1E; color-scheme:dark }
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+#app{max-width:720px;margin:0 auto;padding-block:20px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:900}
+h2{font-size:1.6rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.en{font-family:var(--f-mono);font-size:.88em;direction:ltr;unicode-bidi:isolate}
+mark{background:linear-gradient(transparent 35%,var(--hl) 35%,var(--hl) 88%,transparent 88%);color:inherit;padding:0 2px}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-weight:900;font-size:1.2rem}
+.stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--sheet);border-radius:999px;padding:3px 12px;font-size:.85rem;font-variant-numeric:tabular-nums}
+.toggle[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 0 var(--line),0 10px 30px -18px rgba(20,30,50,.35)}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:flex;justify-content:space-between;gap:8px}
+.term{font-family:var(--f-mono);direction:ltr;text-align:right;font-size:.95rem;color:var(--accent)}
+.take{border-inline-start:4px solid var(--hl);padding:6px 12px;background:color-mix(in srgb,var(--hl) 14%,transparent);font-weight:500}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.actions{position:sticky;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--line);padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));flex-wrap:nowrap}
+.btn,.opt{min-height:48px;-webkit-tap-highlight-color:transparent}
+.btn{border:1px solid var(--line);background:var(--sheet);padding:10px 18px;border-radius:6px;font-weight:600}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.spacer{flex:1}
+
+.progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress>i{display:block;height:100%;background:var(--accent);transition:width .3s}
+
+/* level map */
+.levels{display:grid;gap:10px}
+.lvl{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--sheet);text-align:start}
+.lvl .n{font-family:var(--f-display);font-weight:900;font-size:1.6rem;text-align:center;color:var(--accent)}
+.lvl.locked{opacity:.55}
+.lvl small{color:var(--muted);display:block;font-size:.85rem}
+.lvl .state{font-size:.8rem;color:var(--muted)}
+
+/* visuals */
+.five{display:grid;gap:6px;margin:0;padding:0;list-style:none;counter-reset:q}
+.five li{counter-increment:q;display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:baseline}
+.five li::before{content:counter(q);font-family:var(--f-display);font-weight:900;color:var(--accent);font-size:1.2rem}
+.hourglass{display:flex;flex-direction:column;align-items:center;gap:4px}
+.hourglass div{border:1px solid var(--line);border-radius:4px;padding:6px 10px;text-align:center;font-size:.9rem;min-width:0}
+.hourglass b{font-family:var(--f-mono);font-weight:500;direction:ltr;display:block;font-size:.85rem;color:var(--accent)}
+.hg-a{width:100%;background:color-mix(in srgb,var(--hl) 25%,transparent)}
+.hg-i{width:92%}.hg-m{width:62%;border-width:2px!important;border-color:var(--accent)!important}.hg-r{width:62%}.hg-d{width:92%}
+.paper{border:1px dashed var(--line);border-radius:4px;padding:14px;font-family:var(--f-mono);font-size:.85rem;direction:ltr;text-align:left;line-height:1.55;overflow-x:auto}
+.paper strong{font-weight:500;color:var(--accent)}
+.pico{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pico div{border:1px solid var(--line);border-radius:4px;padding:10px}
+.pico b{font-family:var(--f-display);font-size:1.5rem;color:var(--accent);display:block;line-height:1}
+.pico i{font-style:normal;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);direction:ltr;display:block}
+.checklist{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.checklist li{border-bottom:1px solid var(--line);padding-bottom:8px}
+.checklist li:last-child{border-bottom:0}
+.flow{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.flow .box{border:1px solid var(--line);border-radius:4px;padding:6px 12px;text-align:center}
+.flow .split{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.flow .arrow{color:var(--muted);line-height:1}
+.flow .drop{color:var(--bad);font-size:.8rem}
+.quote{border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:grid;gap:4px}
+.quote .tag{font-size:.78rem;font-weight:600;letter-spacing:.04em}
+.seq{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:s}
+.seq li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:baseline}
+.seq li::before{content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+
+/* quiz */
+.opts{display:grid;gap:8px}
+.opt{border:1.5px solid var(--line);background:var(--sheet);border-radius:6px;padding:12px 14px;text-align:start;font-size:1rem;line-height:1.45;transition:border-color .15s}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.sections{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sections .opt{text-align:center;font-family:var(--f-mono);font-size:.9rem;padding:12px 6px}
+.feedback{border-radius:6px;padding:12px 14px;font-size:.98rem}
+.feedback.ok{background:var(--good-bg)}
+.feedback.no{background:var(--bad-bg)}
+.feedback strong{display:block;margin-bottom:2px}
+.snippet{font-family:var(--f-mono);direction:ltr;text-align:left;font-size:.95rem;line-height:1.6;border-inline-start:4px solid var(--accent);padding:10px 14px;background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.trans{color:var(--muted);font-size:.92rem}
+.linkbtn{background:none;border:0;color:var(--accent);padding:0;text-decoration:underline;font-size:.9rem}
+.big{font-family:var(--f-display);font-size:3.2rem;font-weight:900;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+.note{font-size:.85rem;color:var(--muted)}
+.streak{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:480px){body{font-size:18px}.actions .btn{padding:10px 14px}.actions .btn.primary{flex:1}.topbar .brand{font-size:1.05rem}.sheet{padding:18px}.sections{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:1.75rem}}
+</style>
+
+</head>
+<body>
+<div id="app" dir="rtl" lang="he"></div>
+
+<script>
+const LEVELS=[
+ {n:1,name:'אנטומיה של מאמר',sub:'איך מאמר בנוי ואיפה מחפשים כל דבר',open:true},
+ {n:2,name:'פירמידת הראיות',sub:'איזה סוג מחקר זה, וכמה הוא שווה'},
+ {n:3,name:'מה יכול להטעות',sub:'הטיות קלאסיות, עם דוגמאות מפסיכיאטריה'},
+ {n:4,name:'מספרים בלי פחד',sub:'p-value, CI, NNT ו-effect size מאפס'},
+ {n:5,name:'סקירות ו-GRADE',sub:'מטא-אנליזות, הטיית פרסום, מקרה Turner'},
+ {n:6,name:'זירת הדירוג',sub:'מדרגים מאמרים אמיתיים: לסמוך או לא?'},
+ {n:7,name:'לחפש ולבקש',sub:'איך מוצאים מאמרים טובים ומה לבקש ממני'}
+];
+
+const STEPS=[
+ {t:'card',title:'מאמר הוא טיעון, לא עובדה',term:'Critical appraisal',
+  body:'<p>כל מאמר מנסה לשכנע אותך במשהו. התפקיד שלך הוא לא לזכור את המסקנה, אלא לבדוק אם הטיעון מחזיק.</p><p>בכל מאמר, בלי יוצא מן הכלל, נשאל את אותן חמש שאלות:</p>',
+  visual:'<ol class="five"><li><span><b>מה שאלו?</b> מי, מה, מול מה, ומה מדדו</span></li><li><span><b>איזה סוג מחקר?</b> ואיפה הוא בפירמידה</span></li><li><span><b>מה יכול היה להטעות?</b> הטיות, ערפלנים, מקרה</span></li><li><span><b>כמה גדולה ההשפעה באמת?</b> לא רק "מובהק"</span></li><li><span><b>האם זה רלוונטי למטופל שלי?</b> ואפשר לסמוך?</span></li></ol>',
+  take:'בסוף הקורס חמש השאלות האלה ירוצו לך בראש אוטומטית.'},
+ {t:'card',title:'המפה: IMRaD',term:'Introduction · Methods · Results · and Discussion',
+  body:'<p>כמעט כל מאמר רפואי בנוי באותו סדר. מי שמכיר את המפה יודע איפה לחפש כל דבר.</p><p>המבנה נראה כמו שעון חול: רחב בהתחלה, צר וממוקד באמצע, ושוב רחב בסוף.</p>',
+  visual:'<div class="hourglass"><div class="hg-a"><b>Abstract</b>הסיכום, וגם הפרסומת</div><div class="hg-i"><b>Introduction</b>למה בכלל שאלו את השאלה</div><div class="hg-m"><b>Methods</b>מה עשו בפועל</div><div class="hg-r"><b>Results</b>מה יצא, במספרים</div><div class="hg-d"><b>Discussion</b>מה החוקרים חושבים שזה אומר</div></div>',
+  take:'הכי חשוב לאמינות: Methods. הכי מפתים: Abstract ו-Discussion.'},
+ {t:'q',q:'באיזה חלק תמצא איך נבחרו המשתתפים ואיך חולקו לקבוצות?',
+  opts:['Introduction','Methods','Results','Discussion'],a:1,
+  ex:'ב-Methods. זה החלק שמתאר מה עשו בפועל: מי נכלל, איך חולקו לקבוצות, מה מדדו ומתי.'},
+
+ {t:'card',title:'הכותרת והתקציר',term:'Title + Abstract',
+  body:'<p>התקציר הוא בערך 250 מילה שמסכמות הכל, בדרך כלל בארבע כותרות: <span class="en">Background, Methods, Results, Conclusions</span>.</p><p>הוא מצוין כדי להחליט אם להמשיך לקרוא, ומסוכן כדי להחליט מה לעשות עם מטופל. החוקרים לפעמים מציגים בו תוצאה חלשה כחזקה. לזה קוראים <span class="en">spin</span>.</p>',
+  visual:'<div class="paper"><strong>Results:</strong> The primary outcome (MADRS change at week 8) did not differ significantly between groups. Patients receiving drug X showed greater improvement in sleep quality.<br><br><strong>Conclusions:</strong> <mark>Drug X is a promising treatment for depression</mark>, with benefits on sleep.</div><p class="note">דוגמה מומצאת. שימו לב: המדד הראשי נכשל, והמסקנה עדיין נשמעת חיובית.</p>',
+  take:'תקציר הוא טריילר של סרט. לא שופטים סרט לפי הטריילר.'},
+ {t:'q',q:'התקציר אומר: "Drug X is effective and well tolerated". מה נכון?',
+  opts:['אפשר לסמוך, כי המאמר עבר peer review','התקציר הוא הסיכום של החוקרים עצמם. בודקים את המספרים ואת השיטות לפני שמאמינים','אם זה בכתב עת מוכר, המסקנה מדויקת','תקציר תמיד מדויק יותר מהמאמר המלא'],a:1,
+  ex:'Peer review לא מבטיח שהמסקנה מדויקת. תקציר נכתב בידי החוקרים, ומחקרים מראים ש-spin בתקצירים נפוץ. הבדיקה האמיתית נעשית ב-Methods וב-Results.'},
+
+ {t:'card',title:'המבוא ושאלת המחקר',term:'Introduction → PICO',
+  body:'<p>המבוא מסביר מה עדיין לא ידוע (<span class="en">the gap</span>) ונגמר בשאלת המחקר. את השאלה מפרקים לארבעה חלקים, שנקראים <span class="en">PICO</span>:</p>',
+  visual:'<div class="pico"><div><b>P</b><i>Population</i>מבוגרים עם דיכאון שלא הגיב לשתי תרופות</div><div><b>I</b><i>Intervention</i><span class="en">esketamine</span> בתרסיס לאף</div><div><b>C</b><i>Comparison</i>תרסיס פלצבו (וכולם מקבלים נוגד דיכאון חדש)</div><div><b>O</b><i>Outcome</i>שינוי בציון <span class="en">MADRS</span> אחרי 4 שבועות</div></div>',
+  take:'אם אי אפשר לנסח PICO מתוך המאמר, משהו בשאלה לא ברור.'},
+ {t:'q',q:'מחקר: מבוגרים עם דיכאון עמיד קיבלו קטמין תוך-ורידי או מידזולם, ומדדו MADRS אחרי 24 שעות. מה ה-C?',
+  opts:['מבוגרים עם דיכאון עמיד','קטמין','מידזולם','ציון MADRS אחרי 24 שעות'],a:2,
+  ex:'מידזולם הוא קבוצת ההשוואה. בחרו בו כ-active placebo: לקטמין יש תחושות דיסוציאטיביות בולטות, ומטופל שמקבל מי מלח היה מנחש מיד שהוא בקבוצת הפלצבו. מידזולם גורם לתחושה מורגשת, וכך שומר על הסמיות. כבר כאן רואים איך פרט ב-PICO משפיע על האמינות.'},
+
+ {t:'card',title:'Methods: לב המאמר',term:'Methods',
+  body:'<p>כאן מחליטים אם אפשר לסמוך על המאמר. מחפשים ארבעה דברים:</p>',
+  visual:'<ul class="checklist"><li><b>מי נכלל?</b> <span class="en">inclusion / exclusion criteria</span>. האם הם דומים למטופלים שלך? הרבה מחקרים מוציאים מטופלים אובדניים או עם תחלואה כפולה.</li><li><b>איך חולקו לקבוצות?</b> <span class="en">randomization</span>. הגרלה אמיתית, או שהרופא בחר?</li><li><b>מי ידע מה קיבל?</b> <span class="en">blinding</span>. המטופל, המטפל, ומי שמילא את השאלון.</li><li><b>מה מדדו ומתי?</b> <span class="en">primary outcome</span>. איזה סולם, ואחרי כמה זמן.</li></ul>',
+  take:'בפסיכיאטריה מודדים בעיקר בשאלונים וסולמות, ולכן blinding חשוב במיוחד.'},
+ {t:'q',q:'ניסוי בנוגד דיכאון חדש נמשך 6 שבועות. מה הכי חשוב להבין מזה?',
+  opts:['התרופה בטוחה לשימוש ממושך','אפשר להסיק רק על השפעה קצרת טווח. על מניעת הישנות ועל שימוש של שנים המחקר לא עונה','6 שבועות זה מספיק כדי לדעת הכל','משך המחקר לא משנה, רק התוצאה'],a:1,
+  ex:'משך המעקב הוא חלק מה-O ב-PICO. במחקר של 6 שבועות אי אפשר לדעת על הישנות, על תופעות לוואי מאוחרות או על הפסקת טיפול. זה ממצא נפוץ מאוד בניסויים פסיכיאטריים.'},
+
+ {t:'card',title:'Results: המספרים',term:'Figure 1 + Table 1',
+  body:'<p>לפני שמסתכלים על p-value, בודקים שני דברים:</p><p><b>Figure 1</b> (תרשים זרימה, <span class="en">CONSORT</span>): כמה גויסו וכמה נשרו בדרך.<br><b>Table 1</b>: האם הקבוצות היו דומות בהתחלה (גיל, חומרה, מין).</p>',
+  visual:'<div class="flow"><div class="box">Screened: 412</div><div class="arrow">↓</div><div class="box">Randomized: 300</div><div class="arrow">↓</div><div class="split"><div class="box">Drug X: 150<br><span class="drop">dropped out: 41</span></div><div class="box">Placebo: 150<br><span class="drop">dropped out: 18</span></div></div></div><p class="note">דוגמה מומצאת. פי שניים נשירה בקבוצת התרופה. למה? אולי תופעות לוואי.</p>',
+  take:'כשהרבה נושרים, ובעיקר כשהנשירה לא שווה בין הקבוצות, התוצאה עלולה להיות מוטה. (p-value נלמד ברמה 4, מאפס.)'},
+ {t:'q',q:'גויסו 300 מטופלים ו-120 נשרו לפני סוף המחקר. מה הבעיה העיקרית?',
+  opts:['אין בעיה, 180 זה מספיק','מי שנשאר כנראה שונה ממי שעזב (למשל, מי שסבל מתופעות לוואי עזב), ולכן התוצאה עלולה להיות מוטה','הבעיה היחידה היא שהמחקר יקר יותר','נשירה משפיעה רק על תופעות הלוואי'],a:1,
+  ex:'נשירה של 40% היא דגל אדום. מי שנשאר במחקר הוא לרוב מי שהרגיש טוב יותר או סבל פחות. נלמד ברמה 3 איך החוקרים מנסים לתקן את זה (intention-to-treat).'},
+
+ {t:'card',title:'Discussion: הפרשנות',term:'Discussion → Limitations',
+  body:'<p>כאן החוקרים מספרים לך מה לחשוב על התוצאות. זה החלק הכי פחות אובייקטיבי במאמר.</p><p>אבל יש בו אוצר: פסקת ה-<span class="en">Limitations</span>, שבה החוקרים עצמם כותבים מה חלש במחקר.</p>',
+  visual:'<div class="quote"><span class="tag" style="color:var(--muted)">פרשנות. קוראים בחשדנות</span><span class="en">"These findings support the use of drug X as a first-line treatment…"</span></div><div class="quote"><span class="tag" style="color:var(--good)">זהב. קוראים תמיד</span><span class="en">"Our study has several limitations. First, the follow-up was only 8 weeks…"</span></div>',
+  take:'קרא תמיד את ה-Limitations, ושאל את עצמך: מה הם לא כתבו שם?'},
+ {t:'q',q:'איפה תמצא את מה שהחוקרים עצמם חושבים שחלש במחקר?',
+  opts:['Abstract','Methods','בפסקת ה-Limitations שבתוך ה-Discussion','Funding'],a:2,
+  ex:'ברוב המאמרים יש פסקת Limitations בתוך ה-Discussion. היא לא תמיד שלמה, אבל היא נקודת התחלה מצוינת.'},
+
+ {t:'card',title:'החלקים הנסתרים',term:'Funding · COI · Registration · Supplement',
+  body:'<p>בסוף המאמר, באותיות קטנות, מסתתר מידע חשוב:</p>',
+  visual:'<ul class="checklist"><li><b>Funding.</b> מי שילם על המחקר.</li><li><b>Conflicts of interest.</b> קשרים כספיים של החוקרים, למשל ייעוץ לחברת התרופות.</li><li><b>Trial registration.</b> מספר <span class="en">NCT</span>. האם תוכנית המחקר נרשמה מראש.</li><li><b>Supplementary material.</b> שם מסתתרות הרבה פעמים תוצאות משניות ותופעות לוואי.</li></ul>',
+  take:'רישום מראש מאפשר לבדוק אם החוקרים החליפו את המדד הראשי באמצע הדרך (outcome switching).'},
+ {t:'q',q:'מחקר מומן על ידי החברה שמייצרת את התרופה. מה המסקנה הנכונה?',
+  opts:['המחקר פסול, אפשר להתעלם ממנו','זה לא משנה כלום','זה לא פוסל את המחקר, אבל מעלה עירנות: בודקים רישום מראש, מול מה השוו, ואם המדד הראשי השתנה','רק מחקרים ממשלתיים אמינים'],a:2,
+  ex:'רוב ניסויי התרופות ממומנים בידי התעשייה, ורבים מהם טובים. המימון הוא סיבה לבדוק בזהירות את ההשוואה (למשל מינון נמוך מדי לתרופה המתחרה), את המדדים ואת הרישום.'},
+
+ {t:'card',title:'סדר הקריאה של מומחה',term:'The 10-minute scan',
+  body:'<p>מומחים לא קוראים מאמר מההתחלה עד הסוף. זה הסדר:</p>',
+  visual:'<ol class="seq"><li><span><b>Title + Abstract.</b> האם זה בכלל רלוונטי?</span></li><li><span><b>PICO מתוך Methods.</b> מי, מה, מול מה, מה מדדו</span></li><li><span><b>Figure 1 + Table 1.</b> נשירה ודמיון בין הקבוצות</span></li><li><span><b>Primary outcome ב-Results.</b> מה יצא במדד הראשי</span></li><li><span><b>Limitations.</b> מה החוקרים מודים שחלש</span></li><li><span><b>Funding + COI + Registration.</b></span></li><li><span><b>רק עכשיו: Conclusions.</b> האם הן תואמות את מה שראית?</span></li></ol>',
+  take:'סריקה כזו לוקחת בערך 10 דקות ותופסת את רוב הבעיות.'},
+ {t:'q',q:'יש לך 10 דקות לפני journal club. מה הכי יעיל?',
+  opts:['לקרוא את ה-Introduction בעיון','לקרוא רק את ה-Conclusions','Abstract, ואז PICO מה-Methods, ואז Figure 1 והמדד הראשי, ואז Limitations','לקרוא את ה-Discussion מההתחלה עד הסוף'],a:2,
+  ex:'בדיוק הסריקה של 10 הדקות. ה-Conclusions נקראות אחרונות, כדי שתשפוט אותן לפי מה שראית ולא להפך.'}
+];
+
+const GAME_OPTS=['Abstract','Introduction','Methods','Results','Discussion','Funding/COI'];
+const GAME=[
+ {s:'Patients aged 18–65 with a DSM-5 diagnosis of major depressive disorder and a MADRS score ≥ 22 were eligible.',he:'מטופלים בגילאי 18–65 עם אבחנת דיכאון מז\'ורי לפי DSM-5 וציון MADRS של 22 ומעלה היו כשירים להשתתף.',a:2,ex:'קריטריוני הכללה (inclusion criteria) נמצאים תמיד ב-Methods.'},
+ {s:'Depression affects more than 280 million people worldwide, and about one third do not respond to two adequate antidepressant trials.',he:'דיכאון פוגע ביותר מ-280 מיליון בני אדם, ובערך שליש לא מגיבים לשני ניסיונות טיפול מספקים.',a:1,ex:'רקע כללי ונתוני שכיחות פותחים את ה-Introduction. זה החלק הרחב של שעון החול.'},
+ {s:'At week 8, the mean change in MADRS score was −14.2 with drug X and −11.9 with placebo (difference −2.3; 95% CI −4.1 to −0.5).',he:'בשבוע 8, השינוי הממוצע ב-MADRS היה 14.2- בתרופה ו-11.9- בפלצבו (הפרש 2.3-; רווח סמך 95% מ-4.1- עד 0.5-).',a:3,ex:'מספרים, הפרשים ורווחי סמך, בלי פרשנות. זה Results. (שימו לב: הפרש של 2.3 נקודות ב-MADRS. האם זה משמעותי קלינית? נחזור לזה ברמה 4.)'},
+ {s:'Our findings suggest that drug X may be a valuable addition to the treatment options for depression.',he:'הממצאים שלנו מרמזים שתרופה X עשויה להיות תוספת חשובה לאפשרויות הטיפול בדיכאון.',a:4,ex:'פרשנות ו"מה זה אומר". Discussion. שימו לב למילים may ו-suggest.'},
+ {s:'This study was funded by Pharma Inc. Dr. A has received consulting fees from Pharma Inc.',he:'המחקר מומן על ידי Pharma Inc. ד"ר A קיבל דמי ייעוץ מ-Pharma Inc.',a:5,ex:'מימון וניגוד עניינים, בסוף המאמר.'},
+ {s:'Participants were randomly assigned in a 1:1 ratio using a computer-generated sequence, stratified by site.',he:'המשתתפים חולקו באקראי ביחס 1:1 לפי רצף שנוצר במחשב, עם ריבוד לפי מרכז.',a:2,ex:'איך עשו את ההגרלה (randomization). Methods.'},
+ {s:'Our study has several limitations. First, the follow-up period was only 8 weeks.',he:'למחקר שלנו כמה מגבלות. ראשית, תקופת המעקב הייתה 8 שבועות בלבד.',a:4,ex:'פסקת ה-Limitations, בתוך ה-Discussion.'},
+ {s:'Of 412 patients screened, 300 were randomized; 59 discontinued before week 8.',he:'מתוך 412 שנבדקו, 300 עברו הגרלה; 59 הפסיקו לפני שבוע 8.',a:3,ex:'מה קרה למשתתפים בפועל: Results, ובדרך כלל גם Figure 1.'},
+ {s:'We hypothesized that adding drug X to SSRI treatment would reduce depressive symptoms more than placebo.',he:'שיערנו שהוספת תרופה X לטיפול ב-SSRI תפחית תסמיני דיכאון יותר מפלצבו.',a:1,ex:'ההשערה ושאלת המחקר סוגרות את ה-Introduction.'},
+ {s:'Results: In this 8-week randomized trial (n = 300), drug X reduced depressive symptoms. Conclusions: Drug X is effective and well tolerated.',he:'תוצאות: בניסוי של 8 שבועות (300 משתתפים) התרופה הפחיתה תסמינים. מסקנות: התרופה יעילה ונסבלת היטב.',a:0,ex:'כותרות קצרות של Results ו-Conclusions באותה פסקה. זה סימן ההיכר של Abstract.'},
+ {s:'The trial was registered at ClinicalTrials.gov (NCT number) before enrollment began.',he:'הניסוי נרשם ב-ClinicalTrials.gov לפני תחילת הגיוס.',a:2,ex:'הרישום מופיע בדרך כלל ב-Methods (ולעיתים גם בתקציר). רישום לפני הגיוס הוא סימן טוב.'},
+ {s:'The primary outcome was change from baseline to week 8 in MADRS total score, assessed by raters blinded to treatment allocation.',he:'המדד הראשי היה השינוי בציון MADRS משבוע 0 עד שבוע 8, שנמדד בידי מעריכים שלא ידעו מי קיבל מה.',a:2,ex:'הגדרת המדד הראשי ומי עשה את ההערכה. Methods.'}
+];
+
+const KEY='paperlab.v1';
+let store={xp:0,best:0,l1done:false,voice:false,ans:{},pos:0};
+try{const s=localStorage.getItem(KEY);if(s)store=Object.assign(store,JSON.parse(s))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+
+let view='home',i=0,answered=null,g={i:0,score:0,streak:0,ans:null,showHe:false,order:[]};
+const app=document.getElementById('app');
+
+function strip(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim()}
+let heVoice=null;
+function pickVoice(){if(!('speechSynthesis' in window))return;heVoice=speechSynthesis.getVoices().find(v=>/^he|^iw/i.test(v.lang))||null}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function speak(text){
+  if(!('speechSynthesis' in window))return false;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='he-IL';if(heVoice)u.voice=heVoice;u.rate=1;
+  speechSynthesis.speak(u);return true;
+}
+function stopSpeak(){if('speechSynthesis' in window)speechSynthesis.cancel()}
+function stepText(s){return s.t==='card'?[s.title,strip(s.body),strip(s.visual),s.take].join('. '):[s.q,...s.opts.map((o,k)=>'אפשרות '+(k+1)+': '+o)].join('. ')}
+
+function topBar(){
+  return `<div class="topbar"><span class="brand">מעבדת קריאת מאמרים</span><div class="stats">
+  <span class="pill" title="נקודות ניסיון">XP ${store.xp}</span>
+  <button class="pill toggle" id="voiceT" aria-pressed="${store.voice}" title="הקראה אוטומטית של כל כרטיס">🔊 הקראה אוטומטית</button>
+  ${view!=='home'?'<button class="pill" id="homeB">מפת הרמות</button>':''}</div></div>`;
+}
+function wireTop(){
+  document.getElementById('voiceT').onclick=()=>{store.voice=!store.voice;save();if(!store.voice)stopSpeak();render()};
+  const h=document.getElementById('homeB');if(h)h.onclick=()=>{stopSpeak();view='home';render()};
+}
+
+function renderHome(){
+  app.innerHTML=topBar()+`
+  <section class="sheet">
+    <div class="eyebrow"><span>הקורס שלך</span><span>יחידות של 10 דקות</span></div>
+    <h1>לקרוא מאמר כמו מומחה</h1>
+    <p>שבע רמות, מהקל לקשה. כל רמה: כרטיסים קצרים עם הקראה קולית, שאלה אחרי כל רעיון, ומשחק בסוף. המונחים באנגלית, ההסברים בעברית.</p>
+  </section>
+  <div class="levels">${LEVELS.map(l=>`<button class="lvl ${l.open?'':'locked'}" ${l.open?'data-open="1"':'disabled'}>
+    <span class="n">${l.n}</span><span><b>${l.name}</b><small>${l.sub}</small></span>
+    <span class="state">${l.open?(store.l1done?'✓ הושלם':(store.pos>0?'▶ המשך':'▶ התחל')):'בבנייה'}</span></button>`).join('')}</div>
+  ${(store.pos>0||store.l1done)?'<div class="row"><button class="btn" id="resetB">התחל את רמה 1 מחדש</button></div>':''}
+  ${store.l1done?`<div class="row"><button class="btn primary" id="gameB">שחק שוב: "איפה זה כתוב?"</button><span class="note">שיא: ${store.best}/${GAME.length}</span></div>`:''}`;
+  wireTop();
+  app.querySelector('[data-open]').onclick=()=>{view='lesson';i=Math.min(store.pos||0,STEPS.length-1);render()};
+  const rb=document.getElementById('resetB');if(rb)rb.onclick=()=>{store.ans={};store.pos=0;save();view='lesson';i=0;render()};
+  const gb=document.getElementById('gameB');if(gb)gb.onclick=startGame;
+}
+
+function renderLesson(){
+  answered=store.ans[i]??null;store.pos=i;save();
+  const s=STEPS[i],pct=Math.round(i/STEPS.length*100);
+  let inner='';
+  if(s.t==='card'){
+    inner=`<div class="eyebrow"><span>רמה 1 · אנטומיה של מאמר</span><span>${i+1}/${STEPS.length}</span></div>
+    <h2>${s.title}</h2><div class="term">${s.term}</div>${s.body}${s.visual}<p class="take">${s.take}</p>`;
+  }else{
+    inner=`<div class="eyebrow"><span>בדוק את עצמך</span><span>${i+1}/${STEPS.length}</span></div>
+    <h3>${s.q}</h3><div class="opts">${s.opts.map((o,k)=>{
+      let c='';if(answered!==null){if(k===s.a)c='right';else if(k===answered)c='wrong'}
+      return `<button class="opt ${c}" data-k="${k}" ${answered!==null?'disabled':''}>${o}</button>`}).join('')}</div>
+    ${answered!==null?`<div class="feedback ${answered===s.a?'ok':'no'}"><strong>${answered===s.a?'נכון! +10 XP':'לא בדיוק.'}</strong>${s.ex}</div>`:''}`;
+  }
+  const canNext=s.t==='card'||answered!==null;
+  app.innerHTML=topBar()+`<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
+  <section class="sheet">${inner}</section>
+  <div class="row actions"><button class="btn" id="readB">🔊 הקרא</button><span class="spacer"></span>
+  ${i>0?'<button class="btn" id="prevB">הקודם</button>':''}
+  <button class="btn primary" id="nextB" ${canNext?'':'disabled'}>${i===STEPS.length-1?'למשחק ←':'הבא ←'}</button></div>
+  <p class="note" id="voiceNote" hidden>לא נמצא במכשיר קול בעברית. אפשר להוסיף קול עברי בהגדרות ההקראה של המכשיר.</p>`;
+  wireTop();
+  document.getElementById('readB').onclick=()=>{const ok=speak(stepText(s));if(!ok||!heVoice)document.getElementById('voiceNote').hidden=false};
+  const p=document.getElementById('prevB');if(p)p.onclick=()=>{stopSpeak();i--;answered=null;render()};
+  document.getElementById('nextB').onclick=()=>{stopSpeak();if(i===STEPS.length-1){startGame();return}i++;answered=null;render()};
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{answered=+b.dataset.k;store.ans[i]=answered;if(answered===s.a){store.xp+=10;save()}render();
+    if(store.voice)speak((answered===s.a?'נכון. ':'לא בדיוק. ')+s.ex)});
+  if(store.voice&&s.t==='card'&&answered===null)speak(stepText(s));
+}
+
+function startGame(){
+  stopSpeak();view='game';
+  g={i:0,score:0,streak:0,ans:null,answers:[],showHe:false,order:GAME.map((_,k)=>k).sort(()=>Math.random()-.5)};render();
+}
+function renderGame(){
+  const it=GAME[g.order[g.i]];g.ans=g.answers[g.i]??null;
+  app.innerHTML=topBar()+`<div class="progress" aria-hidden="true"><i style="width:${Math.round(g.i/GAME.length*100)}%"></i></div>
+  <section class="sheet">
+    <div class="eyebrow"><span>משחק · איפה זה כתוב?</span><span>${g.i+1}/${GAME.length}</span></div>
+    <div class="row"><span class="pill">ניקוד ${g.score}</span><span class="pill ${g.streak>1?'streak':''}">🔥 רצף ${g.streak}</span></div>
+    <h3>מאיזה חלק במאמר נלקח המשפט?</h3>
+    <div class="snippet">${it.s}</div>
+    ${g.showHe?`<p class="trans">${it.he}</p>`:'<button class="linkbtn" id="heB">הצג תרגום</button>'}
+    <div class="sections opts">${GAME_OPTS.map((o,k)=>{let c='';if(g.ans!==null){if(k===it.a)c='right';else if(k===g.ans)c='wrong'}
+      return `<button class="opt ${c}" data-k="${k}" ${g.ans!==null?'disabled':''}>${o}</button>`}).join('')}</div>
+    ${g.ans!==null?`<div class="feedback ${g.ans===it.a?'ok':'no'}"><strong>${g.ans===it.a?'נכון!':'התשובה: '+GAME_OPTS[it.a]}</strong>${it.ex}</div>`:''}
+  </section>
+  <div class="row actions">${g.i>0?'<button class="btn" id="prevG">הקודם</button>':''}<span class="spacer"></span><button class="btn primary" id="nextG" ${g.ans===null?'disabled':''}>${g.i===GAME.length-1?'לתוצאה ←':'הבא ←'}</button></div>`;
+  wireTop();
+  const hb=document.getElementById('heB');if(hb)hb.onclick=()=>{g.showHe=true;render()};
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{g.ans=+b.dataset.k;g.answers[g.i]=g.ans;
+    if(g.ans===it.a){g.score++;g.streak++;store.xp+=5+Math.min(g.streak,5);save()}else g.streak=0;render();
+    if(store.voice)speak((g.ans===it.a?'נכון. ':'התשובה היא '+GAME_OPTS[it.a]+'. ')+it.ex)});
+  document.getElementById('nextG').onclick=()=>{stopSpeak();if(g.i===GAME.length-1){view='done';store.l1done=true;store.best=Math.max(store.best,g.score);save();render();return}g.i++;g.showHe=false;render()};
+  const pg=document.getElementById('prevG');if(pg)pg.onclick=()=>{stopSpeak();g.i--;g.showHe=false;render()};
+}
+function renderDone(){
+  const msg=g.score>=10?'מצוין. אתה כבר מנווט במאמר כמו מומחה.':g.score>=7?'יפה מאוד. עוד סיבוב אחד והמפה תשב לך בראש.':'התחלה טובה. כדאי לשחק שוב מחר: חזרה מרווחת היא הדרך הכי טובה לזכור.';
+  app.innerHTML=topBar()+`<section class="sheet">
+    <div class="eyebrow"><span>רמה 1 הושלמה</span><span>XP ${store.xp}</span></div>
+    <div class="big">${g.score}/${GAME.length}</div><h2>${msg}</h2>
+    <p><b>מה לקחת מהרמה הזו:</b> Methods קובע את האמינות. Abstract ו-Discussion הם הפרשנות של החוקרים. Figure 1, Limitations ו-Funding הם המקומות שבהם מסתתרים הדגלים האדומים.</p>
+    <p class="take">תרגיל לשבוע: בפעם הבאה שתפתח מאמר, נסה רק לנסח את ה-PICO שלו בשורה אחת.</p>
+    <p class="note">הרמה הבאה: פירמידת הראיות. איזה סוג מחקר זה, ולמה מחקר תצפיתי על אלפי מטופלים יכול להיות פחות אמין מניסוי קטן.</p>
+  </section>
+  <div class="row actions"><button class="btn" id="againB">שחק שוב</button><button class="btn primary" id="mapB">למפת הרמות</button></div>`;
+  wireTop();
+  document.getElementById('againB').onclick=startGame;
+  document.getElementById('mapB').onclick=()=>{view='home';render()};
+}
+function render(){({home:renderHome,lesson:renderLesson,game:renderGame,done:renderDone})[view]();window.scrollTo({top:0})}
+render();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
+</body>
+</html>
