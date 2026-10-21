@@ -176,6 +176,9 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 .checklist.recap li{display:grid;grid-template-columns:22px 1fr;gap:6px}
 .checklist.recap li::before{content:"✓";color:var(--accent);font-weight:700}
 .speakR{justify-self:start}
+.nav{display:flex;gap:6px;align-items:center}
+.btn.back{padding:8px 12px;min-height:40px;font-size:.85rem;font-weight:500;color:var(--muted)}
+@media (max-width:480px){.actions .nav{flex:1}.actions .nav .primary{flex:1}.actions .spacer{display:block}.actions .btn{padding-inline:12px}}
 </style>
 
 </head>
@@ -821,8 +824,7 @@ function renderLesson(){
   app.innerHTML=topBar()+`<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
   <section class="sheet">${inner}</section>
   <div class="row actions"><button class="btn" id="readB">🔊 הקרא</button><span class="spacer"></span>
-  ${i>0?'<button class="btn" id="prevB">הקודם</button>':''}
-  <button class="btn primary" id="nextB" ${canNext?'':'disabled'}>${i===L.steps.length-1?'למשחק ←':'הבא ←'}</button></div>
+  <span class="nav">${i>0?'<button class="btn back" id="prevB" aria-label="הקודם">→ חזרה</button>':''}<button class="btn primary" id="nextB" ${canNext?'':'disabled'}>${i===L.steps.length-1?'למשחק ←':'הבא ←'}</button></span></div>
   <p class="note" id="voiceNote" hidden>לא נמצא במכשיר קול בעברית. אפשר להוסיף קול עברי בהגדרות ההקראה של המכשיר.</p>`;
   wireTop();
   document.getElementById('readB').onclick=()=>{const ok=speak(stepText(s));if(!ok||!heVoice)document.getElementById('voiceNote').hidden=false};
@@ -851,7 +853,7 @@ function renderGame(){
       return `<button class="opt ${c}" data-k="${k}" ${g.ans!==null?'disabled':''}>${o}</button>`}).join('')}</div>
     ${g.ans!==null?`<div class="feedback ${g.ans===it.a?'ok':'no'}"><strong>${g.ans===it.a?'נכון!':'התשובה: '+opts[it.a]}</strong>${it.ex}</div>`:''}
   </section>
-  <div class="row actions">${g.i>0?'<button class="btn" id="prevG">הקודם</button>':''}<span class="spacer"></span><button class="btn primary" id="nextG" ${g.ans===null?'disabled':''}>${g.i===G.items.length-1?'לתוצאה ←':'הבא ←'}</button></div>`;
+  <div class="row actions"><span class="spacer"></span><span class="nav">${g.i>0?'<button class="btn back" id="prevG" aria-label="הקודם">→ חזרה</button>':''}<button class="btn primary" id="nextG" ${g.ans===null?'disabled':''}>${g.i===G.items.length-1?'לתוצאה ←':'הבא ←'}</button></span></div>`;
   wireTop();
   const hb=document.getElementById('heB');if(hb)hb.onclick=()=>{g.showHe=true;render()};
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{g.ans=+b.dataset.k;g.answers[g.i]=g.ans;
