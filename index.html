@@ -173,6 +173,9 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 @media (max-width:480px){.three{grid-template-columns:1fr}}
 .actions .btn{white-space:nowrap}
 @media (max-width:480px){.actions .spacer{display:none}.actions{gap:8px}}
+.checklist.recap li{display:grid;grid-template-columns:22px 1fr;gap:6px}
+.checklist.recap li::before{content:"✓";color:var(--accent);font-weight:700}
+.speakR{justify-self:start}
 </style>
 
 </head>
@@ -676,6 +679,59 @@ summary:'מתחילים מהנחיות וסקירות, יורדים למאמרי
 homework:'בפעם הבאה שיש לך שאלה קלינית, השתמש בבקשת החיפוש מהרמה הזו ושלח לי.'}
 ];
 
+const RECAPS={
+1:['מאמר הוא טיעון. בודקים אותו בחמש שאלות קבועות: מה שאלו, איזה מחקר, מה יכול להטעות, כמה גדולה ההשפעה, והאם זה רלוונטי.',
+ 'המבנה הקבוע נקרא IMRaD: תקציר, מבוא, שיטות, תוצאות ודיון, בסדר הזה.',
+ 'את שאלת המחקר מפרקים ל-PICO: אוכלוסייה, התערבות, השוואה ותוצאה.',
+ 'החלק שקובע אמינות הוא Methods: מי נכלל, איך הוגרלו, מי ידע מה קיבל, ומה מדדו ומתי.',
+ 'ב-Results מתחילים מ-Figure 1, כדי לראות נשירה, ומ-Table 1, כדי לראות אם הקבוצות דומות.',
+ 'התקציר וה-Discussion הם הפרשנות של החוקרים. דגלים אדומים מחפשים ב-Limitations, במימון וברישום.',
+ 'סדר הקריאה של מומחה: תקציר, PICO, Figure 1, המדד הראשי, Limitations, מימון, ורק בסוף המסקנות.'],
+2:['הפירמידה, מלמעלה: מטא-אנליזה, RCT, עוקבה, מקרה-ביקורת, חתך, תיאורי מקרה, דעת מומחה.',
+ 'תיאור מקרה מגלה תופעות חדשות ונדירות, אבל לא מוכיח סיבתיות.',
+ 'מחקר חתך טוב לשכיחות. הוא לא יודע מה קדם למה.',
+ 'מקרה-ביקורת מתחיל מהמחלה ומסתכל אחורה. טוב למחלות נדירות, חשוף להטיית זיכרון.',
+ 'מחקר עוקבה הולך קדימה בזמן. טוב לפרוגנוזה ולנזקים, חשוף לערפלנים.',
+ 'ב-RCT ההגרלה מאזנת גם גורמים שאף אחד לא מדד. הכי טוב לשאלות של יעילות טיפול.',
+ 'מטא-אנליזה טובה רק כמו המחקרים שבתוכה.',
+ 'השאלה הראשונה מול כל מאמר: האם סוג המחקר מתאים לשאלה?'],
+3:['לפני שמאמינים לתוצאה, שוללים שלושה הסברים: מקרה, הטיה וערפלן.',
+ 'הטיית בחירה: המשתתפים שונים מהמטופלים שלך, או שהקבוצות שונות מההתחלה.',
+ 'ערפלן: גורם שלישי שקשור גם לחשיפה וגם לתוצאה. למשל, המחלה עצמה שבגללה ניתנה התרופה.',
+ 'בפסיכיאטריה המדדים סובייקטיביים, ולכן סמיות קריטית. תרופה עם תחושה בולטת שוברת אותה.',
+ 'ניתוח ITT שומר על ההגרלה. ניתוח של המשלימים בלבד הוא דגל צהוב, במיוחד עם נשירה גבוהה.',
+ 'בלי קבוצת ביקורת כמעט תמיד יש "שיפור", בגלל רגרסיה לממוצע.',
+ 'משווים את המדד הראשי לרישום המקורי. ממצא בתת-קבוצה הוא השערה, לא מסקנה.'],
+4:['ה-p-value הוא הסיכוי לקבל תוצאה כזו אם אין שום השפעה. הוא לא אומר כמה ההשפעה גדולה.',
+ 'רווח סמך הוא הטווח הסביר להשפעה. אם הוא חוצה 0 בהפרשים, או 1 ביחסים, התוצאה לא מובהקת.',
+ 'סיכון יחסי נשמע דרמטי. החלטות קליניות מקבלים לפי סיכון מוחלט.',
+ 'NNT הוא אחד חלקי ההפרש המוחלט. NNH הוא אותו חישוב, לנזק.',
+ 'גודל אפקט: 0.2 קטן, 0.5 בינוני, 0.8 גדול. נוגדי דיכאון מול פלצבו: בסביבות 0.3.',
+ 'ב-OR וב-RR, הערך 1 אומר שאין הבדל. תמיד מחפשים גם את הסיכון המוחלט.',
+ 'מובהק סטטיסטית זה לא בהכרח מורגש למטופל. בודקים מול סף המשמעות הקלינית.'],
+5:['סקירה שיטתית: פרוטוקול מראש, חיפוש מלא, שני סוקרים, הערכת הטיות ותרשים PRISMA.',
+ 'ב-forest plot כל ריבוע הוא מחקר, הקו הוא רווח הסמך, והיהלום הוא התוצאה המאוחדת.',
+ 'כש-I² גבוה, המחקרים לא מסכימים. שואלים למה, לפני שמאמינים לממוצע.',
+ 'הטיית פרסום: מחקרים שליליים נעלמים. Turner הראה שהספרות ניפחה את יעילות נוגדי הדיכאון.',
+ 'GRADE מדרג ודאות לכל תוצאה: גבוהה, בינונית, נמוכה או נמוכה מאוד.',
+ 'מורידים רמה בגלל הטיה, חוסר עקביות, חוסר ישירות, חוסר דיוק והטיית פרסום. מעלים בגלל השפעה גדולה ויחסי מינון-תגובה.',
+ 'טבלת Summary of findings בסקירות Cochrane ובהנחיות חוסכת שעות.'],
+6:['מדרגים טענה מסוימת, לא מאמר שלם, ולא את כתב העת.',
+ 'כרטיס הדירוג: PICO, סוג המחקר, הטיות, גודל ההשפעה, והקשר רחב.',
+ 'דגלים אדומים: מדגם קטן, בלי ביקורת, מדד ראשי שהוחלף, הבדל קטן מסף המשמעות, נשירה גבוהה, בלי רישום.',
+ 'דגלים ירוקים: רישום מראש, ITT, דיווח על איכות הסמיות, מספרים מוחלטים, ושחזור במחקרים אחרים.',
+ 'הלקחים מהמאמרים: Wakefield פורסם בכתב עת יוקרתי, Study 329 הבליט מדדים משניים, המספר של STAR*D לא החזיק בניתוח מחדש, וכותרות על פסילוסיבין חזקות מהנתונים.'],
+7:['מתחילים מהנחיות ומסיכומים קליניים, אחר כך סקירות שיטתיות, ורק אז מאמרים בודדים.',
+ 'ב-PubMed מסננים לפי סוג מאמר, משתמשים במונחי MeSH, ונעזרים ב-Similar articles.',
+ 'ClinicalTrials.gov לבדיקת רישום, Retraction Watch למאמרים שנשלפו. מאמר ב-medRxiv עוד לא עבר ביקורת.',
+ 'impact factor גבוה לא מבטיח אמינות, ויש להיזהר מכתבי עת טורפניים.',
+ 'בקשה טובה ממני מציינת סוג מחקר, טווח שנים, אוכלוסייה ומה להחזיר, ודורשת PMID כדי לאמת.',
+ 'תמיד מאמתים ציטוטים. הדרך הכי מלמדת: לנתח לבד, ואז להשוות לניתוח שלי.']
+};
+LEVELS.forEach(l=>{const r=RECAPS[l.n];if(r)l.steps.push({t:'card',recap:true,title:'סיכום הפרק',term:'Recap · '+l.name,
+  body:'<p>הנקודות החשובות של הפרק, בקצרה:</p>',visual:'<ul class="checklist recap">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ul>',
+  take:'אפשר לחזור לכל הסיכומים מהמפה, בכפתור "סיכומי הפרקים".'})});
+
 const KEY='paperlab.v1';
 let store={xp:0,voice:false,all:false,lv:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');
@@ -739,9 +795,11 @@ function renderHome(){
     return `<button class="lvl ${open?'':'locked'}" data-n="${l.n}" ${open?'':'disabled'}>
     <span class="n">${l.n}</span><span><b>${l.name}</b><small>${l.sub}</small></span>
     <span class="state">${state}</span></button>`}).join('')}</div>
+  <div class="row"><button class="btn" id="recapB">📋 סיכומי הפרקים</button></div>
   ${store.all?'':'<button class="linkbtn unlock" id="allB">לפתוח את כל הרמות בלי לחכות</button>'}`;
   wireTop();
   app.querySelectorAll('.lvl[data-n]:not([disabled])').forEach(b=>b.onclick=()=>openLevel(+b.dataset.n));
+  document.getElementById('recapB').onclick=()=>{view='recaps';render()};
   const ab=document.getElementById('allB');if(ab)ab.onclick=()=>{store.all=true;save();render()};
 }
 
@@ -823,7 +881,16 @@ function renderDone(){
   const nl=document.getElementById('nextL');if(nl)nl.onclick=()=>openLevel(next.n);
   const mb=document.getElementById('mapB');if(mb)mb.onclick=()=>{view='home';render()};
 }
-function render(){({home:renderHome,lesson:renderLesson,game:renderGame,done:renderDone})[view]();window.scrollTo({top:0})}
+function renderRecaps(){
+  app.innerHTML=topBar()+`<section class="sheet"><div class="eyebrow"><span>דף סיכום</span><span>${LEVELS.length} פרקים</span></div>
+  <h1>סיכומי הפרקים</h1><p>כל הנקודות החשובות של הקורס, במקום אחד. טוב לחזרה לפני journal club.</p></section>
+  ${LEVELS.map(l=>`<section class="sheet"><div class="eyebrow"><span>פרק ${l.n}</span><span>${LV(l.n).done?'✓ הושלם':''}</span></div>
+  <h2>${l.name}</h2><ul class="checklist recap">${RECAPS[l.n].map(x=>'<li>'+x+'</li>').join('')}</ul>
+  <button class="btn speakR" data-n="${l.n}">🔊 הקרא</button></section>`).join('')}`;
+  wireTop();
+  app.querySelectorAll('.speakR').forEach(b=>b.onclick=()=>{const l=LEVELS[b.dataset.n-1];speak(l.name+'. '+RECAPS[l.n].join(' '))});
+}
+function render(){({home:renderHome,lesson:renderLesson,game:renderGame,done:renderDone,recaps:renderRecaps})[view]();window.scrollTo({top:0})}
 render();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
